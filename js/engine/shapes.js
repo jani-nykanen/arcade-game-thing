@@ -22,11 +22,12 @@ class Shapes
         // We could use radians as well, but degrees are easier
         // to undersand
         var step = 36.0;
-        var zstep = 0.1;
+        var zstep = 1.0 / 6;
         for(var z = -1.0; z < 1.0; z += zstep)
         {
-            var radius = 1.0 - Math.abs(z);
-            var radiusUp = 1.0 - Math.abs(z+zstep);
+            if(z > 1.0) z = 1.0;
+            var radius = Math.sqrt(1 - Math.pow(z,2));
+            var radiusUp =Math.sqrt(1 - Math.pow(z+zstep,2));
 
             for(var angle = 0; angle < 360.0; angle += step)
             {
@@ -34,8 +35,8 @@ class Shapes
                 vertices.push(radius*Math.sin(angle * Math.PI / 180.0) );
                 vertices.push(z);
 
-                vertices.push(radiusUp*Math.cos( (angle+step) * Math.PI / 180.0) );
-                vertices.push(radiusUp*Math.sin( (angle+step) * Math.PI / 180.0) );
+                vertices.push(radius*Math.cos( (angle+step) * Math.PI / 180.0) );
+                vertices.push(radius*Math.sin( (angle+step) * Math.PI / 180.0) );
                 vertices.push(z);
 
                 // We must push this vertice twice to "triangulate"
@@ -48,8 +49,8 @@ class Shapes
                     vertices.push(z+zstep);
                 }
 
-                vertices.push(radius*Math.cos( (angle) * Math.PI / 180.0) );
-                vertices.push(radius*Math.sin( (angle) * Math.PI / 180.0) );
+                vertices.push(radiusUp*Math.cos( (angle) * Math.PI / 180.0) );
+                vertices.push(radiusUp*Math.sin( (angle) * Math.PI / 180.0) );
                 vertices.push(z+zstep);
 
                 vertices.push(radius*Math.cos( (angle) * Math.PI / 180.0) );

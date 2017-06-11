@@ -20,6 +20,7 @@ class Assets
             font16 : Loader.LoadBitmap("assets/bitmaps/font16.png"),
             cursor : Loader.LoadBitmap("assets/bitmaps/cursor.png"),
             space : Loader.LoadBitmap("assets/bitmaps/space.png"),
+            sun : Loader.LoadBitmap("assets/bitmaps/sun.png"),
         }
     }
 
