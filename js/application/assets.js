@@ -21,6 +21,7 @@ class Assets
             cursor : Loader.LoadBitmap("assets/bitmaps/cursor.png"),
             space : Loader.LoadBitmap("assets/bitmaps/space.png"),
             sun : Loader.LoadBitmap("assets/bitmaps/sun.png"),
+            sunShine : Loader.LoadBitmap("assets/bitmaps/sun_shine.png"),
         }
     }
 

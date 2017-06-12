@@ -7,6 +7,7 @@
  *
  */
  
+/*! Shader type */
 var ShaderType =
 {
     Fog : 0,
@@ -14,6 +15,13 @@ var ShaderType =
     LimitPalette : 2,
     Fog : 3,
 };
+
+/*! Texture parameter type */
+var TextureFilter =
+{
+    Nearest : 0,
+    Linear : 1,
+}
 
 /*! Graphics class
  *
@@ -140,6 +148,8 @@ class Graphics
 
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
         this.gl.enable(this.gl.BLEND);
+
+        this.filter = TextureFilter.Nearest;
 		
     }
 
@@ -182,6 +192,14 @@ class Graphics
     SetViewport(w,h)
     {
         this.gl.viewport(0, 0, w, h);
+    }
+
+    /*! Set texture filtering type
+     * @param type Type
+     */
+    SetFiltering(type)
+    {
+        this.filter = type;
     }
 
     /*! Draw text
@@ -229,6 +247,20 @@ class Graphics
         {
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D,tex);
+
+            switch(this.filter)
+            {
+            default:
+            case TextureFilter.Nearest:
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                break;
+
+            case TextureFilter.Linear:
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                break;
+            }
         }
 
         gl.bindBuffer(gl.ARRAY_BUFFER,mesh.vBuffer);
@@ -253,6 +285,26 @@ class Graphics
 
         this.transf.Translate(x,y,0.0);
         this.transf.Scale(bmp.width,bmp.height,1);
+        this.transf.Use();
+
+        this.DrawMesh(Shapes.plane,bmp.tex);
+
+        this.transf.Pop();
+    }
+
+    /*! Draw full, scaled bitmap
+     * @param bmp Bitmap
+     * @param dx Destination x
+     * @param dy Destination y
+     * @param dw Destination width
+     * @param dh Destination height
+     */
+    DrawScaledBitmap(bmp,dx,dy,dw,dh)
+    {
+        this.transf.Push();
+
+        this.transf.Translate(dx,dy,0.0);
+        this.transf.Scale(bmp.width * (dw/bmp.width),bmp.height * (dh/bmp.height),1);
         this.transf.Use();
 
         this.DrawMesh(Shapes.plane,bmp.tex);

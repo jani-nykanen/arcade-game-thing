@@ -57,7 +57,7 @@ class Application extends ApplicationCore
         for(var key in this.scenes)
         {
             var s = this.scenes[key];
-            s.Init(this.g,this);
+            s.Init(this.graphics,this);
         }
             
         this.currentScene = "game";

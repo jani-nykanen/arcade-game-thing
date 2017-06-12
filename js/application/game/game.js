@@ -9,7 +9,7 @@ class Game extends Scene
     Init(g,Super)
     {
         this.Super = Super;
-        Stage.Init();
+        Stage.Init(Super);
     }
 
     /*! Draw, see scene.js*/

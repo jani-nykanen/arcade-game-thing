@@ -54,10 +54,20 @@ class ApplicationCore
 	/*! Triggered when the document view is resized*/
 	static _OnResize()
 	{
-		classRef.graphics.canvas.width  = document.documentElement.clientWidth;
-  		classRef.graphics.canvas.height = document.documentElement.clientHeight;
+		if(typeof InstallTrigger !== 'undefined')
+		{
+			classRef.graphics.canvas.width = window.innerWidth;
+			classRef.graphics.canvas.height = window.innerHeight;
+			classRef.OnResize(window.innerWidth,window.innerHeight);
+		}
+		else
+		{
+			classRef.graphics.canvas.width  = document.documentElement.clientWidth;
+			classRef.graphics.canvas.height = document.documentElement.clientHeight;
 
-		classRef.OnResize( document.documentElement.clientWidth,document.documentElement.clientHeight);
+			classRef.OnResize( document.documentElement.clientWidth,document.documentElement.clientHeight);
+
+		}
 	}
 
 	/*! Event callback, on key press */
@@ -118,9 +128,20 @@ class ApplicationCore
 
 		window.addEventListener('resize',ApplicationCore._OnResize);
 
-		this.graphics.canvas.width = document.documentElement.clientWidth;
-        this.graphics.canvas.height = document.documentElement.clientHeight;
-		this.OnResize(document.documentElement.clientWidth,document.documentElement.clientHeight);
+		if(typeof InstallTrigger !== 'undefined')
+		{
+			this.graphics.canvas.width = window.innerWidth;
+			this.graphics.canvas.height = window.innerHeight;
+			this.OnResize(window.innerWidth,window.innerHeight);
+		}
+		else
+		{
+
+			this.graphics.canvas.width = document.documentElement.clientWidth;
+			this.graphics.canvas.height = document.documentElement.clientHeight;
+			this.OnResize(document.documentElement.clientWidth,document.documentElement.clientHeight);
+
+		}
 
 		Controls.Init();
 		window.addEventListener("keydown",ApplicationCore._OnKeyDown);
