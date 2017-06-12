@@ -22,6 +22,7 @@ class Assets
             space : Loader.LoadBitmap("assets/bitmaps/space.png"),
             sun : Loader.LoadBitmap("assets/bitmaps/sun.png"),
             sunShine : Loader.LoadBitmap("assets/bitmaps/sun_shine.png"),
+            earth : Loader.LoadBitmap("assets/bitmaps/earth.png"),
         }
     }
 
