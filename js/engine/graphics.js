@@ -292,6 +292,71 @@ class Graphics
         this.transf.Pop();
     }
 
+    /*! Draw a centered bitmap to 2D plane (ignore bitmap size)
+     * @param bmp Bitmap
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param angle Angle
+     * @param sx Scale x
+     * @param sy Scale y
+     */
+    DrawCenteredBitmap(bmp,x,y,angle,sx,sy)
+    {
+        this.transf.Push();
+
+        this.transf.Translate(x,y,0.0);
+        this.transf.RotateQuaternion(0,0,angle);
+        this.transf.Scale(sx,sy,1);
+        this.transf.Use();
+
+        this.DrawMesh(Shapes.planeCenter,bmp.tex);
+
+        this.transf.Pop();
+    }
+
+    /*! Draw bitmap region, scaled rotated, ignore bitmap size in drawing
+     * @param bmp Bitmap
+     * @param sx Source x
+     * @param sy Source y
+     * @param sw Source width
+     * @param sh Source height
+     * @param dx Destination x
+     * @param dy Destination y
+     * @param dw Destination width
+     * @param dh Destination height
+     * @param angle Angle
+     * @param isx Image scale x
+     * @param isy Image scale y
+     */
+    DrawCenteredBitmapRegion(bmp,sx,sy,sw,sh,dx,dy,dw,dh,angle,isx,isy)
+    {
+        var wmod = 1.0 / bmp.width;
+        var hmod = 1.0 / bmp.height;
+
+        // Edit values to fit 1.0x1.0 area
+        sx *= wmod;
+        sy *= hmod;
+        sw *= wmod;
+        sh *= hmod;
+
+        var data = [sx,sy,sx+sw,sy,sx+sw,sy+sh,sx,sy+sh];
+
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, Shapes.planeCenterEditable.uvBuffer);
+        this.gl.bufferSubData(this.gl.ARRAY_BUFFER,0,new Float32Array(data));
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER,null);
+
+        this.transf.Push();
+
+        this.transf.Translate(dx,dy,0.0);
+        this.transf.RotateQuaternion(0,0,angle);
+        this.transf.Scale(isx,isy,1);
+        this.transf.Use();
+
+        this.DrawMesh(Shapes.planeCenterEditable,bmp.tex);
+
+        this.transf.Pop();
+    }
+
     /*! Draw full, scaled bitmap
      * @param bmp Bitmap
      * @param dx Destination x
@@ -349,6 +414,24 @@ class Graphics
         this.DrawMesh(Shapes.editablePlane,bmp.tex);
 
         this.transf.Pop();
+    }
+
+    /*! Draw sprite (special for non-pixel perfect rendering)
+     * @param bmp Bitmap
+     * @param x X coord
+     * @param y Y coord
+     * @param angle Angle
+     * @param sx Scale x
+     * @param sy Scale y
+     */
+    DrawSpriteSpecial(bmp,spr,x,y,angle,sx,sy)
+    {
+        var sourcex = spr.currentFrame * spr.width;
+        var sourcey = spr.currentRow * spr.height;
+
+        this.DrawCenteredBitmapRegion(bmp,sourcex,sourcey,
+            spr.width,spr.height,
+            x,y,spr.width,spr.height,angle,sx,sy);
     }
 
     /*! Fill a rectangle

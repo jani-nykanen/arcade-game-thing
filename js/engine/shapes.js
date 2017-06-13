@@ -147,6 +147,20 @@ class Shapes
             [0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0]
         );
 
+        // Centered plane
+        this.planeCenter = new Mesh(
+            [-0.5,-0.5,0.0, 0.5,-0.5,0.0, 0.5,0.5,0.0, -0.5,0.5,0.0],
+            [0,1,2, 2,3,0],
+            [0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0]
+        );
+
+        // Centered, editable plane
+        this.planeCenterEditable = new Mesh(
+            [-0.5,-0.5,0.0, 0.5,-0.5,0.0, 0.5,0.5,0.0, -0.5,0.5,0.0],
+            [0,1,2, 2,3,0],
+            [0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0]
+        );
+
         //This mesh will be used to draw bitmap region
         this.editablePlane = new Mesh(
             [0.0,0.0,0.0, 1.0,0.0,0.0, 1.0,1.0,0.0, 0.0,1.0,0.0],

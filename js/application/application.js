@@ -62,6 +62,8 @@ class Application extends ApplicationCore
             
         this.currentScene = "game";
 
+        VPad.Init();
+
     }
 
     /*! Triggers when assets are loaded */
@@ -97,7 +99,9 @@ class Application extends ApplicationCore
     /*! OnUpdate, see core.js */
 	OnUpdate(deltaTime)
     {
-         this.timeMod = (deltaTime / 1000.0) / (1.0/60.0);
+        VPad.Update();
+
+        this.timeMod = (deltaTime / 1000.0) / (1.0/60.0);
 
         if(Assets.HasLoaded() == false)
             return;
