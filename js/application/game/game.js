@@ -11,6 +11,7 @@ class Game extends Scene
         this.Super = Super;
         Stage.Init(Super);
 
+        Camera.Init();
         GameObjects.Init();
     }
 
@@ -42,5 +43,7 @@ class Game extends Scene
     {
         GameObjects.Update(timeMod);
         Stage.Update(timeMod);
+
+        Camera.Limit();
     }
 }

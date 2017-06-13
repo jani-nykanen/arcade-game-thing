@@ -25,6 +25,7 @@ class Assets
             earth : Loader.LoadBitmap("assets/bitmaps/earth.png"),
             bee : Loader.LoadBitmap("assets/bitmaps/bee_anim.png"),
             gas : Loader.LoadBitmap("assets/bitmaps/gas.png"),
+            platform : Loader.LoadBitmap("assets/bitmaps/platform.png"),
         }
     }
 

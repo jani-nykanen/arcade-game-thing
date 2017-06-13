@@ -163,4 +163,23 @@ class Stage
         g.ChangeShader(ShaderType.Default);
         g.SetFiltering(TextureFilter.Nearest);
     }
+
+    /*! Draw stage floor
+     * Draw the stage floor.
+     * Unlike other stuff, this depens on the camera pos
+     * @param g Graphics object
+     */
+    static DrawFloor(g)
+    {
+        var transparencyValue = 0.8 + (Math.sin(this.sunAngle*8)*0.1);
+
+        g.eff.Reset();
+        g.eff.SetColor(1.0,1.0,1.0,transparencyValue);
+        g.eff.Use();
+
+        g.DrawCenteredBitmap(Assets.textures.platform,0,0,0,2.5,2.5);
+
+        g.eff.Reset();
+        g.eff.Use();
+    }
 }

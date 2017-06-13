@@ -28,8 +28,10 @@ class GameObjects
 
         g.transf.Identity();
         g.transf.Ortho2D(2.0,2.0);
-        g.transf.Translate(1.0,1.0,0.0);
+        g.transf.Translate(1.0 - Camera.x,1.0 - Camera.y,0.0);
         g.transf.Use();
+
+        Stage.DrawFloor(g);
 
         this.player.Draw(g);
     }

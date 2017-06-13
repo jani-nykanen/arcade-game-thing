@@ -81,19 +81,32 @@ class Player
         }
     }
 
+    /*! Move the camera
+     * @param timeMod Time modifier
+     */
+    MoveCamera(timeMod)
+    {
+        var dist = Math.hypot(Camera.x-this.x,Camera.y-this.y);
+        var angle = Math.atan2(Camera.y-this.y,Camera.x-this.x);
+
+        Camera.x -= Math.cos(angle) * (dist/24);
+        Camera.y -= Math.sin(angle) * (dist/24);
+    }
+
     /*! Update
      * @param timeMod Time modifier
      */
     Update(timeMod)
     {
-        var px = (this.x+1.0)/2 * 320;
-        var py = (this.y+1.0)/2 * 240;
+        var px = (this.x+1.0-Camera.x)/2 * 320;
+        var py = (this.y+1.0-Camera.y)/2 * 240;
 
         this.angle = Math.atan2(Controls.mouse.vpos.y-py,Controls.mouse.vpos.x-px) + Math.PI/2;
 
         this.Controls();
         this.Move(timeMod);
         this.Animate(timeMod);
+        this.MoveCamera(timeMod);
 
         if(this.totalSpeed > 0)
         {
