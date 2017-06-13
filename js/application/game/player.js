@@ -21,6 +21,13 @@ class Player
         this.angle = 0.0;
 
         this.spr = new Sprite(128,128);
+
+        this.gas = new Array(16);
+        for(var i = 0; i < 16; i++)
+        {
+            this.gas[i] = new Gas();
+        }
+        this.gasTimer = 10;
     }
 
     /*! Controls */
@@ -79,8 +86,6 @@ class Player
      */
     Update(timeMod)
     {
-        
-
         var px = (this.x+1.0)/2 * 320;
         var py = (this.y+1.0)/2 * 240;
 
@@ -89,6 +94,31 @@ class Player
         this.Controls();
         this.Move(timeMod);
         this.Animate(timeMod);
+
+        if(this.totalSpeed > 0)
+        {
+            this.gasTimer -= 1.0 * timeMod;
+            if(this.gasTimer <= 0.0)
+            {
+                for(var i = 0; i < this.gas.length; i++)
+                {
+                    if(this.gas[i].exist == false)
+                    {
+                        this.gas[i].Create(
+                            this.x - 0.175 * Math.cos(this.angle - Math.PI/2),
+                            this.y - 0.175 * Math.sin(this.angle - Math.PI/2),1.5,{x:-this.speed.x/2,y:-this.speed.y/2});
+                        break;
+                    }
+                }
+
+                this.gasTimer = 3;
+            }
+        }
+
+        for(var i = 0; i < this.gas.length; i++)
+        {
+            this.gas[i].Update(timeMod);
+        }
     }
 
     /*! Draw player
@@ -97,6 +127,14 @@ class Player
     Draw(g)
     {
         g.SetFiltering(TextureFilter.Linear);
+
+        for(var i = 0; i < this.gas.length; i++)
+        {
+            this.gas[i].Draw(g);
+        }
+
+        g.eff.Reset();
+        g.eff.Use();
 
         //g.DrawCenteredBitmapRegion(Assets.textures.bee,0,0,128,128,this.x,this.y,128,128,this.angle,0.5,0.5);
         g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5,0.5);

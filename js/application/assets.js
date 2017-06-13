@@ -24,6 +24,7 @@ class Assets
             sunShine : Loader.LoadBitmap("assets/bitmaps/sun_shine.png"),
             earth : Loader.LoadBitmap("assets/bitmaps/earth.png"),
             bee : Loader.LoadBitmap("assets/bitmaps/bee_anim.png"),
+            gas : Loader.LoadBitmap("assets/bitmaps/gas.png"),
         }
     }
 
