@@ -91,6 +91,24 @@ class Player
 
         Camera.x -= Math.cos(angle) * (dist/24);
         Camera.y -= Math.sin(angle) * (dist/24);
+
+        var mvpx = Controls.mouse.vpos.x;
+        var mvpy = Controls.mouse.vpos.y;
+
+        if(mvpx < 0) mvpx = 0;
+        else if(mvpx > 320) mvpx = 320;
+
+        if(mvpy < 0) mvpy = 0;
+        else if(mvpy > 240) mvpy = 240;
+
+        var mposx = (mvpx-160.0)/320.0  + Camera.x;
+        var mposy = (mvpy-160.0)/240.0  + Camera.y;
+
+        dist = Math.hypot(Camera.x-mposx,Camera.y-mposy);
+        angle = Math.atan2(Camera.y-mposy,Camera.x-mposx);
+
+        Camera.x -= Math.cos(angle) * (dist/20);
+        Camera.y -= Math.sin(angle) * (dist/20);
     }
 
     /*! Update
