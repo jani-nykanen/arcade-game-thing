@@ -150,6 +150,8 @@ class Graphics
         this.gl.enable(this.gl.BLEND);
 
         this.filter = TextureFilter.Nearest;
+
+        this.lastTexture = 0;
 		
     }
 
@@ -245,8 +247,12 @@ class Graphics
         
         if(tex != null)
         {
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D,tex);
+            if(tex != this.lastTexture)
+            {
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D,tex);
+                this.lastTexture = tex;
+            }
 
             switch(this.filter)
             {

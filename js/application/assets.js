@@ -26,6 +26,10 @@ class Assets
             bee : Loader.LoadBitmap("assets/bitmaps/bee_anim.png"),
             gas : Loader.LoadBitmap("assets/bitmaps/gas.png"),
             platform : Loader.LoadBitmap("assets/bitmaps/platform.png"),
+            face1 : Loader.LoadBitmap("assets/bitmaps/face1.png"),
+            plant : Loader.LoadBitmap("assets/bitmaps/plant.png"),
+            palm : Loader.LoadBitmap("assets/bitmaps/palm.png"),
+            ring : Loader.LoadBitmap("assets/bitmaps/ring.png"),
         }
     }
 

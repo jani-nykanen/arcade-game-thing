@@ -8,7 +8,8 @@ class GameObjects
     /*! Initialize */
     static Init()
     {
-        this.player = new Player(0,0);
+        this.player = new Player(0,1.5);
+        this.boss = new Boss();
     }
 
     /*! Update
@@ -17,6 +18,7 @@ class GameObjects
     static Update(timeMod)
     {
         this.player.Update(timeMod);
+        this.boss.Update(timeMod);
     }
 
     /*! Draw
@@ -24,6 +26,8 @@ class GameObjects
      */
     static Draw(g)
     {
+        g.SetDepthTesting(false);
+
         g.ChangeShader(ShaderType.Default);
 
         g.transf.Identity();
@@ -33,6 +37,9 @@ class GameObjects
 
         Stage.DrawFloor(g);
 
+        this.boss.Draw(g);
         this.player.Draw(g);
+
+        g.SetDepthTesting(true);
     }
 }
