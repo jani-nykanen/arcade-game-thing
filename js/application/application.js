@@ -63,6 +63,7 @@ class Application extends ApplicationCore
         this.currentScene = "game";
 
         VPad.Init();
+        VPad.PushButton("warp",32);
 
     }
 

@@ -31,6 +31,9 @@ class Game extends Scene
         g.transf.Identity();
         g.transf.Use();
 
+        g.eff.Reset();
+        g.eff.Use();
+
         g.DrawText(this.Super.font,Assets.textures.font16,"Press F4 to go full screen",2,240-16,0);
         g.DrawText(this.Super.font,Assets.textures.font16,"FPS: " + (Math.round(60.0/this.Super.timeMod)).toString() ,2,2,0);
 

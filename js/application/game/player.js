@@ -28,13 +28,36 @@ class Player
             this.gas[i] = new Gas();
         }
         this.gasTimer = 10;
+
+        this.warpTimer = 0;
     }
 
     /*! Controls */
     Controls()
     {
-        this.target.x = VPad.axis.x / 50;
-        this.target.y = VPad.axis.y / 50;
+        if(this.warpTimer <= 0)
+        {
+            this.target.x = VPad.axis.x / 50;
+            this.target.y = VPad.axis.y / 50;
+
+            if(VPad.buttons.warp.state == State.Pressed)
+            {
+                this.warpTimer = 30;
+                this.speed.x *= 2;
+                this.speed.y *= 2;
+                this.target.x *= 2;
+                this.target.y *= 2;
+            }
+
+        }
+        else
+        {
+            if(VPad.buttons.warp.state == State.Released)
+            {
+                this.target.x /= 2;
+                this.target.y /= 2;
+            }
+        }
     }
 
     /*! Move
@@ -77,7 +100,7 @@ class Player
     {
         if(this.totalSpeed > 0.0)
         {
-            this.spr.Animate(0,0,3,8 - this.totalSpeed*300,timeMod);
+            this.spr.Animate(0,0,3,8 - Math.floor(this.totalSpeed*300),timeMod);
         }
     }
 
@@ -116,17 +139,26 @@ class Player
      */
     Update(timeMod)
     {
-        var px = (this.x+1.0-Camera.x)/2 * 320;
-        var py = (this.y+1.0-Camera.y)/2 * 240;
+        if(this.warpTimer <= 0.0)
+        {
+            var px = (this.x+1.0-Camera.x)/2 * 320;
+            var py = (this.y+1.0-Camera.y)/2 * 240;
 
-        this.angle = Math.atan2(Controls.mouse.vpos.y-py,Controls.mouse.vpos.x-px) + Math.PI/2;
+            this.angle = Math.atan2(Controls.mouse.vpos.y-py,Controls.mouse.vpos.x-px) + Math.PI/2;
 
+        }
+        else
+        {
+            this.angle += Math.PI*2 / 30.0 * timeMod;
+            this.warpTimer -= 1.0 * timeMod;
+        }
+        
         this.Controls();
         this.Move(timeMod);
         this.Animate(timeMod);
         this.MoveCamera(timeMod);
 
-        if(this.totalSpeed > 0)
+        if(this.totalSpeed > 0 && this.warpTimer <= 0.0)
         {
             this.gasTimer -= 1.0 * timeMod;
             if(this.gasTimer <= 0.0)
@@ -165,10 +197,18 @@ class Player
         }
 
         g.eff.Reset();
+       
+        var scaleMod = 1;
+        if(this.warpTimer > 0)
+        {
+            scaleMod = Math.abs(this.warpTimer - 15) / 15;
+
+            g.eff.SetColor(scaleMod,scaleMod,1,1);
+        }
+
         g.eff.Use();
 
-        //g.DrawCenteredBitmapRegion(Assets.textures.bee,0,0,128,128,this.x,this.y,128,128,this.angle,0.5,0.5);
-        g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5,0.5);
+        g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
 
         g.SetFiltering(TextureFilter.Nearest);
     }

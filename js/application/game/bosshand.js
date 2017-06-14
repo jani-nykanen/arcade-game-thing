@@ -20,8 +20,8 @@ class BossHand
         this.x = 0;
         this.y = 0;
 
-        this.ringPos = new Array(8);
-        for(var i = 0; i < 8; i++)
+        this.ringPos = new Array(6);
+        for(var i = 0; i < this.ringPos.length; i++)
         {
             this.ringPos[i] = {x:0,y:0};
         }
