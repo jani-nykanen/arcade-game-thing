@@ -176,14 +176,14 @@ class Player
         if(mvpy < 0) mvpy = 0;
         else if(mvpy > 240) mvpy = 240;
 
-        var mposx = (mvpx-160.0)/320.0 + Camera.x;
+        var mposx = (mvpx-160.0)/320.0 + Camera.x * (4/3);
         var mposy = (mvpy-120.0)/240.0 + Camera.y;
 
-        dist = Math.hypot(Camera.x-mposx,Camera.y-mposy);
-        angle = Math.atan2(Camera.y-mposy,Camera.x-mposx);
+        dist = Math.hypot(Camera.x* (4/3)-mposx,Camera.y-mposy);
+        angle = Math.atan2(Camera.y-mposy,Camera.x* (4/3)-mposx);
 
-        Camera.x -= Math.cos(angle) * (dist/20);
-        Camera.y -= Math.sin(angle) * (dist/20);
+        Camera.x -= Math.cos(angle) * (dist/16);
+        Camera.y -= Math.sin(angle) * (dist/16);
     }
 
     /*! Update

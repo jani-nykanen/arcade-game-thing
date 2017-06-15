@@ -18,6 +18,7 @@ class Assets
         this.textures =
         {
             font16 : Loader.LoadBitmap("assets/bitmaps/font16.png"),
+            font24 : Loader.LoadBitmap("assets/bitmaps/font24.png"),
             cursor : Loader.LoadBitmap("assets/bitmaps/cursor.png"),
             space : Loader.LoadBitmap("assets/bitmaps/space.png"),
             sun : Loader.LoadBitmap("assets/bitmaps/sun.png"),

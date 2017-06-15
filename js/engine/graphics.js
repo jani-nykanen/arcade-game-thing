@@ -212,9 +212,15 @@ class Graphics
 	 * @param y Y coord
 	 * @param flag Flag (left, center etc.)
 	 */
-	DrawText(font,bmp, text, x, y, flag)
+	DrawText(font,bmp, text, x, y, flag, offset)
 	{
         if(font == null) return;
+
+        font.fw = bmp.width / 16;
+        font.fh = bmp.height / 16;
+
+        if(offset == null)
+            offset = 0;
 
         var tex = bmp.tex;
 
@@ -228,7 +234,7 @@ class Graphics
             this.transf.Use();
             font._DrawChar(this,tex,text.charCodeAt(i));
             this.transf.Scale(1.0/font.fw,1.0/font.fh,1);
-            this.transf.Translate(font.fw * (3/4),0.0,0.0);
+            this.transf.Translate( (font.fw+offset) * (3/4),0.0,0.0);
         }
 
         this.transf.Pop();

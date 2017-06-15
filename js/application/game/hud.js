@@ -20,12 +20,22 @@ class HUD
         this.timeMod = timeMod;
     }
 
+    /*! Draw score
+     * @param g Graphics object
+     */
+    static DrawScore(g)
+    {
+        g.DrawText(this.font,Assets.textures.font16,"SCORE:" ,160 - 4*8,0,0);
+        g.DrawText(this.font,Assets.textures.font24,"00000000" ,160 - 8*8,11,0,-12);
+    }
+
     /*! Draw HUD
      * @param g Graphics object
      */
     static Draw(g)
     {
-        g.DrawText(this.font,Assets.textures.font16,"Press F4 to go full screen",2,240-16,0);
-        g.DrawText(this.font,Assets.textures.font16,"FPS: " + (Math.round(60.0/this.timeMod)).toString() ,2,2,0);
+        g.DrawText(this.font,Assets.textures.font16,"FPS: " + (Math.round(60.0/this.timeMod)).toString() ,2,240-16,0);
+
+        this.DrawScore(g);
     }
 }
