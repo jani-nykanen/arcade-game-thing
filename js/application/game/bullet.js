@@ -48,7 +48,7 @@ class Bullet {
         this.x += this.speed.x * timeMod;
         this.y += this.speed.y * timeMod;
 
-        if(this.x < -2.8* (4/3) || this.x > 2.8* (4/3) || this.y < -2.8 || this.y > 2.8)
+        if(this.x < -2.3* (4/3) || this.x > 2.3* (4/3) || this.y < -2.8 || this.y > 2.8)
         {
             this.exist = false;
         }

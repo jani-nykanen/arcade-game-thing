@@ -32,6 +32,7 @@ class Assets
             palm : Loader.LoadBitmap("assets/bitmaps/palm.png"),
             ring : Loader.LoadBitmap("assets/bitmaps/ring.png"),
             bullet : Loader.LoadBitmap("assets/bitmaps/bullet.png"),
+            hud : Loader.LoadBitmap("assets/bitmaps/hud.png"),
         }
     }
 

@@ -80,14 +80,14 @@ class Player
     /*! Limit movement to the game area */
     Limit()
     {
-        if(this.x < -2.6* (4/3))
+        if(this.x < -2.1* (4/3))
         {
-            this.x = -2.6* (4/3);
+            this.x = -2.1* (4/3);
             this.speed.x = 0;
         }
-        else if(this.x > 2.6* (4/3))
+        else if(this.x > 2.1* (4/3))
         {
-            this.x = 2.6* (4/3);
+            this.x = 2.1* (4/3);
             this.speed.x = 0;
         }
 

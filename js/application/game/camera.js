@@ -15,10 +15,10 @@ class Camera
     /*! Limit camera to the game area */
     static Limit()
     {
-        if(this.x < -1.75) 
-            this.x = -1.75;
-        else if(this.x > 1.75) 
-            this.x = 1.75;
+        if(this.x < -1.25) 
+            this.x = -1.25;
+        else if(this.x > 1.25) 
+            this.x = 1.25;
 
         if(this.y < -1.75) 
             this.y = -1.75;
