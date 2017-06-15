@@ -36,8 +36,6 @@ class Application extends ApplicationCore
     {
         var gl = this.graphics.gl;
 
-        this.font = new BitmapFont(gl,16,16);
-
         Assets.Load();
 
         this.angle = 0.0;   

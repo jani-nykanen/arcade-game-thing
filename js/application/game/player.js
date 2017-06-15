@@ -21,6 +21,7 @@ class Player
         this.angle = 0.0;
 
         this.spr = new Sprite(128,128);
+        this.shootSpr = new Sprite(128,128);
 
         this.gas = new Array(16);
         for(var i = 0; i < 16; i++)
@@ -30,6 +31,8 @@ class Player
         this.gasTimer = 10;
 
         this.warpTimer = 0;
+
+        this.isShooting = false;
     }
 
     /*! Controls */
@@ -48,6 +51,20 @@ class Player
                 this.target.x *= 2;
                 this.target.y *= 2;
             }
+            else if(this.isShooting == false && Controls.mousestate[0] == State.Down)
+            {
+                this.isShooting = true;
+                this.shootSpr.currentFrame = 0;
+                this.shootSpr.currentRow = 1;
+                this.shootSpr.changeFrameCount = 0;
+
+                GameObjects.CreateBullet(
+                     this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                     this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                     Math.cos(this.angle- Math.PI/2.0) * 0.05,
+                     Math.sin(this.angle- Math.PI/2.0) * 0.05, BulletType.Friendly
+                );
+            }
 
         }
         else
@@ -57,6 +74,32 @@ class Player
                 this.target.x /= 2;
                 this.target.y /= 2;
             }
+        }
+    }
+
+    /*! Limit movement to the game area */
+    Limit()
+    {
+        if(this.x < -2.6* (4/3))
+        {
+            this.x = -2.6* (4/3);
+            this.speed.x = 0;
+        }
+        else if(this.x > 2.6* (4/3))
+        {
+            this.x = 2.6* (4/3);
+            this.speed.x = 0;
+        }
+
+        if(this.y < -2.6)
+        {
+            this.y = -2.6;
+            this.speed.y = 0;
+        }
+        else if(this.y > 2.6)
+        {
+            this.y = 2.6;
+            this.speed.y = 0;
         }
     }
 
@@ -102,6 +145,15 @@ class Player
         {
             this.spr.Animate(0,0,3,8 - Math.floor(this.totalSpeed*300),timeMod);
         }
+
+        if(this.isShooting)
+        {
+            this.shootSpr.Animate(1,0,4,3,timeMod);
+            if(this.shootSpr.currentFrame == 4)
+            {
+                this.isShooting = false;
+            }
+        }
     }
 
     /*! Move the camera
@@ -124,8 +176,8 @@ class Player
         if(mvpy < 0) mvpy = 0;
         else if(mvpy > 240) mvpy = 240;
 
-        var mposx = (mvpx-160.0)/320.0  + Camera.x;
-        var mposy = (mvpy-160.0)/240.0  + Camera.y;
+        var mposx = (mvpx-160.0)/320.0 + Camera.x;
+        var mposy = (mvpy-120.0)/240.0 + Camera.y;
 
         dist = Math.hypot(Camera.x-mposx,Camera.y-mposy);
         angle = Math.atan2(Camera.y-mposy,Camera.x-mposx);
@@ -141,7 +193,7 @@ class Player
     {
         if(this.warpTimer <= 0.0)
         {
-            var px = (this.x+1.0-Camera.x)/2 * 320;
+            var px = (this.x+1.0-Camera.x * (4/3))/2 * 320;
             var py = (this.y+1.0-Camera.y)/2 * 240;
 
             this.angle = Math.atan2(Controls.mouse.vpos.y-py,Controls.mouse.vpos.x-px) + Math.PI/2;
@@ -157,6 +209,7 @@ class Player
         this.Move(timeMod);
         this.Animate(timeMod);
         this.MoveCamera(timeMod);
+        this.Limit();
 
         if(this.totalSpeed > 0 && this.warpTimer <= 0.0)
         {
@@ -209,6 +262,10 @@ class Player
         g.eff.Use();
 
         g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+        if(this.isShooting)
+        {
+            g.DrawSpriteSpecial(Assets.textures.bee,this.shootSpr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+        }
 
         g.SetFiltering(TextureFilter.Nearest);
     }

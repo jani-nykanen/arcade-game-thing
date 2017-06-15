@@ -13,6 +13,7 @@ class Game extends Scene
 
         Camera.Init();
         GameObjects.Init();
+        HUD.Init(Super.graphics.gl);
     }
 
     /*! Draw, see scene.js*/
@@ -34,8 +35,7 @@ class Game extends Scene
         g.eff.Reset();
         g.eff.Use();
 
-        g.DrawText(this.Super.font,Assets.textures.font16,"Press F4 to go full screen",2,240-16,0);
-        g.DrawText(this.Super.font,Assets.textures.font16,"FPS: " + (Math.round(60.0/this.Super.timeMod)).toString() ,2,2,0);
+        HUD.Draw(g);
 
         g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);
         
@@ -48,5 +48,7 @@ class Game extends Scene
         Stage.Update(timeMod);
 
         Camera.Limit();
+
+        HUD.Update(timeMod);
     }
 }
