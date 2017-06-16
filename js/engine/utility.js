@@ -6,6 +6,15 @@
  * 
  */
 
+/*! Replace portion in a string
+ * @param index Index
+ * @param replacement Replacement
+ */
+String.prototype.replaceAt=function(index, replacement) 
+{
+    return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
+}
+
 /*! Direction */
 var Direction =
 {
@@ -127,5 +136,21 @@ class Utility
         var axis = vec3.create();
         var rad = quat.getAxisAngle(axis,q);
         return {rad:rad,axis: {x: axis[0],y:axis[1],z:axis[2]} };
+    }
+    
+    /*! Integer to string with zeros (max 8)
+     * @param number Number
+     */
+    static IntToStringWithZeros(number)
+    {
+        // Make the number integer, if it's not already
+        number = Math.floor(number); 
+
+        var str = "00000000";
+        if(number == 0) return str;
+
+        str = str.replaceAt(8-String(number).length,String(number));
+
+        return str;
     }
 }

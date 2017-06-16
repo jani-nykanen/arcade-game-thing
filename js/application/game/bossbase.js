@@ -21,6 +21,37 @@ class BossBase
         this.plantScaleMod += 0.05 * timeMod;
     }
 
+    /*! On bullet collision
+     * @param b Bullet
+     */
+    OnBulletCollision(b)
+    {
+        if(b.exist == false) return;
+
+        var dist = Math.hypot(this.x-b.x,this.y-b.y);
+
+        if(dist < 0.7)
+        {
+            b.exist = false;
+            b.deathTimer = 30;
+        }
+    }
+
+    /*! On player collision
+     * @param p Player
+     */
+    OnPlayerCollision(p)
+    {
+        var dist = Math.hypot(this.x-p.x,this.y-p.y);
+
+        if(dist < 0.75)
+        {
+            var angle = Math.atan2(this.y-p.y,this.x-p.x);
+            p.x -= Math.cos(angle) * (0.75-dist);
+            p.y -= Math.sin(angle) * (0.75-dist);
+        }
+    }
+
     /*! Draw
      * @paramg g Graphics object
      */

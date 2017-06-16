@@ -37,6 +37,19 @@ class Boss
         {
             this.hands[i].OnBulletCollision(b);
         }
+        this.base.OnBulletCollision(b);
+    }
+
+    /*! On player collision
+     * @param p Player
+     */
+    OnPlayerCollision(p)
+    {
+        for(var i = 0; i < this.hands.length; i++)
+        {
+            this.hands[i].OnPlayerCollision(p);
+        }
+        this.base.OnPlayerCollision(p);
     }
 
     /*! Draw

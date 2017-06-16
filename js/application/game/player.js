@@ -33,9 +33,10 @@ class Player
         this.warpTimer = 0;
 
         this.isShooting = false;
-
         this.isSpcShooting = false;
         this.spcShootTimer = 0;
+
+        this.hurtTimer = 0;
     }
 
     /*! Controls */
@@ -81,12 +82,13 @@ class Player
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                         Math.cos(this.angle- Math.PI/2.0) * 0.05,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.05, BulletType.Friendly
+                        Math.sin(this.angle- Math.PI/2.0) * 0.05,10, BulletType.Friendly
                     );
 
                 }
-                else if(Controls.mousestate[2] == State.Pressed)
+                else if(Status.bombs > 0 && Controls.mousestate[2] == State.Pressed)
                 {
+                    Status.bombs --;
                     this.isSpcShooting = true;
                     this.spcShootTimer = 0;
                 }
@@ -218,6 +220,16 @@ class Player
         Camera.y -= Math.sin(angle) * (dist/16);
     }
 
+    /*! Hurt player */
+    Hurt()
+    {
+        if(this.warpTimer <= 0 && this.hurtTimer <= 0)
+        {
+            this.hurtTimer = 60;
+            Status.health --;
+        }
+    }
+
     /*! Update
      * @param timeMod Time modifier
      */
@@ -249,13 +261,26 @@ class Player
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                         Math.cos(this.angle- Math.PI/2.0) * 0.075,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.075, BulletType.Special
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075,500, BulletType.Special
                     );
 
                 this.isSpcShooting = false;
             }
         }
         
+        if(this.hurtTimer > 0)
+        {
+            this.hurtTimer -= 1.0 * timeMod;
+
+            Camera.shake.x = Math.random() * 0.02 - 0.01;
+            Camera.shake.y = Math.random() * 0.02 - 0.01;
+        }
+        else
+        {
+            Camera.shake.x = 0;
+            Camera.shake.y = 0;
+        }
+
         this.Controls();
         this.Move(timeMod);
         this.Animate(timeMod);
@@ -309,10 +334,18 @@ class Player
 
             g.eff.SetColor(scaleMod,scaleMod,1,1);
         }
+        else if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/4) % 2 == 0)
+        {
+            g.eff.SetColor(2.0,0.0,0.0,1.0);
+        }
 
         g.eff.Use();
 
         g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+
+        g.eff.Reset();
+        g.eff.Use();
+
         if(this.isShooting)
         {
             g.DrawSpriteSpecial(Assets.textures.bee,this.shootSpr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);

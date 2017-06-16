@@ -25,15 +25,29 @@ class HUD
      */
     static DrawHealthBar(g)
     {
+        var length = (Status.bossHealth / 10000) * (320-32) ;
+
         g.ChangeShader(ShaderType.NoTexture);
 
+        // White
         g.eff.Reset();
         g.eff.Use();
         g.FillRect(16-2,240-24-2,320-32+4,16+4);
 
+        // Black
         g.eff.SetColor(0.0,0.0,0.0,1.0);
         g.eff.Use();
         g.FillRect(16-1,240-24-1,320-32+2,16+2);
+
+        // Gray
+        g.eff.SetColor(0.5,0.5,0.5,1.0);
+        g.eff.Use();
+        g.FillRect(16 + length ,240-24,320-32 - length,16);
+
+        // Black end
+        g.eff.SetColor(0.0,0.0,0.0,1.0);
+        g.eff.Use();
+        g.FillRect(16+length,240-24-1,1,16+2);
 
         var modif = 1.0;
         for(var i = 0; i < 4; i++)
@@ -41,7 +55,7 @@ class HUD
             modif = 0.25 + i*0.25;
             g.eff.SetColor(1.0*modif,0.25*modif,0.25*modif,1.0);
             g.eff.Use();
-            g.FillRect(16,240-24+i*2,320-32,16-i*4);
+            g.FillRect(16,240-24+i*2,length,16-i*4);
         }
 
         g.eff.Reset();
@@ -82,7 +96,7 @@ class HUD
     static DrawScore(g)
     {
         g.DrawText(this.font,Assets.textures.font16,"SCORE:" ,176 - 4*8,0,-2);
-        g.DrawText(this.font,Assets.textures.font24,"00000000" ,176 - 8*8,11,0,-12);
+        g.DrawText(this.font,Assets.textures.font24,Utility.IntToStringWithZeros(Status.score) ,176 - 8*8,11,0,-12);
     }
 
     /*! Draw hearts
@@ -92,7 +106,10 @@ class HUD
     {   
         for(var i = 0; i < 5; i++)
         {
-            g.DrawBitmapRegion(Assets.textures.hud,0,0,18,18,2+i*20,4,18,18);
+            if(i > Status.health-1)
+                g.DrawBitmapRegion(Assets.textures.hud,18,0,18,18,2+i*20,4,18,18);
+            else
+                g.DrawBitmapRegion(Assets.textures.hud,0,0,18,18,2+i*20,4,18,18);
         }    
     }
 
@@ -136,7 +153,7 @@ class HUD
         g.eff.Reset();
         g.ChangeShader(ShaderType.Default);
 
-        for(var i = 0; i < 3; i++)
+        for(var i = 0; i < Status.bombs; i++)
         {
             g.DrawBitmapRegion(Assets.textures.hud,0,18,18,18,4,56 + i*20,18,18);
         }    

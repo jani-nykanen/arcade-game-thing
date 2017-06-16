@@ -24,6 +24,7 @@ class GameObjects
     {
         this.player.Update(timeMod);
         this.boss.Update(timeMod);
+        this.boss.OnPlayerCollision(this.player);
 
         for(var i = 0; i < this.bullets.length; i++)
         {
@@ -46,7 +47,7 @@ class GameObjects
 
         g.transf.Identity();
         g.transf.Ortho2D(2.0 * (4.0/3.0),2.0);
-        g.transf.Translate( (1.0 - Camera.x) * (4/3),1.0 - Camera.y,0.0);
+        g.transf.Translate( (1.0 - Camera.x - Camera.shake.x) * (4/3),1.0 - Camera.y - Camera.shake.y,0.0);
         g.transf.Use();
 
         Stage.DrawFloor(g);
@@ -69,13 +70,13 @@ class GameObjects
      * @param sy Speed y
      * @param type Bullet type
      */
-    static CreateBullet(x,y,sx,sy,type)
+    static CreateBullet(x,y,sx,sy,power,type)
     {
         for(var i = 0; i < this.bullets.length; i++)
         {
             if(this.bullets[i].exist == false && this.bullets[i].deathTimer <= 0.0)
             {
-                this.bullets[i].Create(x,y,sx,sy,type);
+                this.bullets[i].Create(x,y,sx,sy,power,type);
                 break;
             }
         }

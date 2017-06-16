@@ -10,6 +10,8 @@ class Camera
     {
         this.x = 0;
         this.y = 0;
+
+        this.shake = {x:0,y:0};
     }
 
     /*! Limit camera to the game area */

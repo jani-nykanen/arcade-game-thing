@@ -14,6 +14,7 @@ class Game extends Scene
         Camera.Init();
         GameObjects.Init();
         HUD.Init(Super.graphics.gl);
+        Status.Init();
     }
 
     /*! Draw, see scene.js*/

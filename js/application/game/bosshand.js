@@ -64,15 +64,30 @@ class BossHand
      */
     OnBulletCollision(b)
     {
-        if(b.exist == false) return;
+        if(b.exist == false || b.type == BulletType.Enemy) return;
 
         var dist = Math.hypot(this.x-b.x,this.y-b.y);
 
         if(dist < 0.325)
         {
+            Status.bossHealth -= b.power;
+            Status.AddPoints(b.type == BulletType.Friendly ? 10 : 1000);
             this.hurtTimer = 30;
             b.exist = false;
             b.deathTimer = 30;
+        }
+    }
+
+    /*! On player collision
+     * @param p Player
+     */
+    OnPlayerCollision(p)
+    {
+        var dist = Math.hypot(this.x-p.x,this.y-p.y);
+
+        if(dist < 0.375)
+        {
+            p.Hurt();
         }
     }
 
@@ -87,9 +102,9 @@ class BossHand
         }
 
         g.eff.Reset();
-        if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/2) % 2 == 0)
+        if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/4) % 2 == 0)
         {
-            g.eff.SetColor(2.0,0.0,0.0,1.0);
+            g.eff.SetColor(2.0,0.5,0.5,1.0);
         }
         g.eff.Use();
 

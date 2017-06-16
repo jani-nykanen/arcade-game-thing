@@ -21,6 +21,7 @@ class Bullet {
         this.type = BulletType.Friendly;
         this.exist = false;   
         this.deathTimer = 0;
+        this.power = 0;
     }
 
     /*! Create bullet
@@ -30,12 +31,13 @@ class Bullet {
      * @param sy Speed y
      * @param type Bullet type
      */
-    Create(x,y,sx,sy,type)
+    Create(x,y,sx,sy,pow,type)
     {
         this.x = x;
         this.y = y;
         this.speed.x = sx;
         this.speed.y = sy;
+        this.power = pow;
         this.type = type;
         this.exist = true;
         this.deathTimer = 0;
