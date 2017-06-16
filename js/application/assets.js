@@ -33,6 +33,7 @@ class Assets
             ring : Loader.LoadBitmap("assets/bitmaps/ring.png"),
             bullet : Loader.LoadBitmap("assets/bitmaps/bullet.png"),
             hud : Loader.LoadBitmap("assets/bitmaps/hud.png"),
+            circle : Loader.LoadBitmap("assets/bitmaps/circle.png"),
         }
     }
 

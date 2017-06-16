@@ -6,6 +6,7 @@ BulletType =
 {
     Friendly : 0,
     Enemy : 1,
+    Special : 2,
 }
 
 /*! Bullet class */
@@ -63,9 +64,16 @@ class Bullet {
         || (this.x < (Camera.x-1.1)* (4/3) || this.x > (Camera.x+1.1)* (4/3) || this.y < Camera.y-1.1 || this.y > Camera.y+1.1)
         ) return;
 
+        var scale = 0.175;
+
         g.eff.Reset();
+        if(this.type == BulletType.Special)
+        {
+            g.eff.SetColor(255.0,255.0,255.0,1.0);
+            scale = 0.25;
+        }
         g.eff.Use();
 
-        g.DrawCenteredBitmap(Assets.textures.bullet,this.x,this.y,0,0.175,0.175);
+        g.DrawCenteredBitmap(Assets.textures.bullet,this.x,this.y,0,scale,scale);
     }
 }

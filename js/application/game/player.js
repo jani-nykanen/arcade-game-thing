@@ -33,11 +33,27 @@ class Player
         this.warpTimer = 0;
 
         this.isShooting = false;
+
+        this.isSpcShooting = false;
+        this.spcShootTimer = 0;
     }
 
     /*! Controls */
     Controls()
     {
+        if(this.isSpcShooting)
+        {
+            this.target.x = 0;
+            this.target.y = 0;
+
+            if(this.spcShootTimer > 60 && Controls.mousestate[2] == State.Up)
+            {
+                this.isSpcShooting = false;
+            }
+
+            return;
+        }
+        
         if(this.warpTimer <= 0)
         {
             this.target.x = VPad.axis.x / 50;
@@ -51,19 +67,30 @@ class Player
                 this.target.x *= 2;
                 this.target.y *= 2;
             }
-            else if(this.isShooting == false && Controls.mousestate[0] == State.Down)
+            else if(this.isShooting == false)
             {
-                this.isShooting = true;
-                this.shootSpr.currentFrame = 0;
-                this.shootSpr.currentRow = 1;
-                this.shootSpr.changeFrameCount = 0;
+                if(Controls.mousestate[0] == State.Down)
+                {
 
-                GameObjects.CreateBullet(
-                     this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
-                     this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
-                     Math.cos(this.angle- Math.PI/2.0) * 0.05,
-                     Math.sin(this.angle- Math.PI/2.0) * 0.05, BulletType.Friendly
-                );
+                    this.isShooting = true;
+                    this.shootSpr.currentFrame = 0;
+                    this.shootSpr.currentRow = 1;
+                    this.shootSpr.changeFrameCount = 0;
+
+                    GameObjects.CreateBullet(
+                        this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                        this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                        Math.cos(this.angle- Math.PI/2.0) * 0.05,
+                        Math.sin(this.angle- Math.PI/2.0) * 0.05, BulletType.Friendly
+                    );
+
+                }
+                else if(Controls.mousestate[2] == State.Pressed)
+                {
+                    this.isSpcShooting = true;
+                    this.spcShootTimer = 0;
+                }
+            
             }
 
         }
@@ -154,6 +181,11 @@ class Player
                 this.isShooting = false;
             }
         }
+
+        if(this.isSpcShooting)
+        {
+            this.spr.Animate(0,0,3,1,timeMod);
+        }
     }
 
     /*! Move the camera
@@ -191,18 +223,37 @@ class Player
      */
     Update(timeMod)
     {
-        if(this.warpTimer <= 0.0)
+        if(!this.isSpcShooting)
         {
-            var px = (this.x+1.0-Camera.x * (4/3))/2 * 320;
-            var py = (this.y+1.0-Camera.y)/2 * 240;
+            if(this.warpTimer <= 0.0)
+            {
+                var px = (this.x+1.0-Camera.x * (4/3))/2 * 320;
+                var py = (this.y+1.0-Camera.y)/2 * 240;
 
-            this.angle = Math.atan2(Controls.mouse.vpos.y-py,Controls.mouse.vpos.x-px) + Math.PI/2;
+                this.angle = Math.atan2(Controls.mouse.vpos.y-py,Controls.mouse.vpos.x-px) + Math.PI/2;
 
+            }
+            else
+            {
+                this.angle += Math.PI*2 / 30.0 * timeMod;
+                this.warpTimer -= 1.0 * timeMod;
+            }
         }
-        else
+
+        if(this.isSpcShooting)
         {
-            this.angle += Math.PI*2 / 30.0 * timeMod;
-            this.warpTimer -= 1.0 * timeMod;
+            this.spcShootTimer += 1.0 * timeMod;
+            if(this.spcShootTimer > 120)
+            {
+                GameObjects.CreateBullet(
+                        this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                        this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                        Math.cos(this.angle- Math.PI/2.0) * 0.075,
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075, BulletType.Special
+                    );
+
+                this.isSpcShooting = false;
+            }
         }
         
         this.Controls();
@@ -265,6 +316,12 @@ class Player
         if(this.isShooting)
         {
             g.DrawSpriteSpecial(Assets.textures.bee,this.shootSpr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+        }
+        if(this.isSpcShooting)
+        {
+            var size = 0.25 * (1.0/120.0 * this.spcShootTimer);
+            g.DrawCenteredBitmap(Assets.textures.circle,this.x + (0.15+size/2) * Math.cos(this.angle - Math.PI/2),
+                        this.y + (0.15+size/2) * Math.sin(this.angle - Math.PI/2),0,size,size);
         }
 
         g.SetFiltering(TextureFilter.Nearest);

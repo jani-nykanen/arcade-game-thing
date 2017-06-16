@@ -128,6 +128,20 @@ class HUD
         g.DrawText(this.font,Assets.textures.font16,"Lvl 1" ,40 - 26,36,-4);
     }
 
+    /*! Draw bombs
+     * @param g Graphics object
+     */
+    static DrawBombs(g)
+    {
+        g.eff.Reset();
+        g.ChangeShader(ShaderType.Default);
+
+        for(var i = 0; i < 3; i++)
+        {
+            g.DrawBitmapRegion(Assets.textures.hud,0,18,18,18,4,56 + i*20,18,18);
+        }    
+    }
+
     /*! Draw HUD
      * @param g Graphics object
      */
@@ -135,6 +149,7 @@ class HUD
     {
         
         this.DrawHearts(g);
+        this.DrawBombs(g);
         this.DrawWeaponElements(g);
         this.DrawScore(g);
         this.DrawMultiplier(g);

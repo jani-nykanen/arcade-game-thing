@@ -317,7 +317,7 @@ class Graphics
         this.transf.Push();
 
         this.transf.Translate(x,y,0.0);
-        this.transf.RotateQuaternion(0,0,angle);
+        if(angle != 0) this.transf.RotateQuaternion(0,0,angle);
         this.transf.Scale(sx,sy,1);
         this.transf.Use();
 
