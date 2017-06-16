@@ -25,6 +25,8 @@ class BossHand
         {
             this.ringPos[i] = {x:0,y:0};
         }
+
+        this.hurtTimer = 0;
     }
 
     /*! Update 
@@ -50,6 +52,28 @@ class BossHand
             this.ringPos[i].x = Math.cos(this.angle) * dist * sign;
             this.ringPos[i].y = Math.sin(this.angle) * dist * sign;
         }
+    
+        if(this.hurtTimer > 0)
+        {
+            this.hurtTimer -= 1.0 * timeMod;
+        }
+    }
+
+    /*! On bullet collision
+     * @param b Bullet
+     */
+    OnBulletCollision(b)
+    {
+        if(b.exist == false) return;
+
+        var dist = Math.hypot(this.x-b.x,this.y-b.y);
+
+        if(dist < 0.325)
+        {
+            this.hurtTimer = 30;
+            b.exist = false;
+            b.deathTimer = 30;
+        }
     }
 
     /*! Draw
@@ -62,7 +86,17 @@ class BossHand
             g.DrawCenteredBitmap(Assets.textures.ring,this.ringPos[i].x,this.ringPos[i].y,0,0.35,0.35);
         }
 
+        g.eff.Reset();
+        if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/2) % 2 == 0)
+        {
+            g.eff.SetColor(2.0,0.0,0.0,1.0);
+        }
+        g.eff.Use();
+
         g.DrawCenteredBitmap(Assets.textures.palm,this.x,this.y,-this.angle - Math.PI /2,0.75,0.75);
+
+        g.eff.Reset();
+        g.eff.Use();
     }
     
 }

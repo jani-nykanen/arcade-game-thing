@@ -28,6 +28,17 @@ class Boss
         }
     }
 
+    /*! Check bullet collision for each part
+     * @param b Bullet
+     */
+    OnBulletCollision(b)
+    {
+        for(var i = 0; i < this.hands.length; i++)
+        {
+            this.hands[i].OnBulletCollision(b);
+        }
+    }
+
     /*! Draw
      * @paramg g Graphics object
      */

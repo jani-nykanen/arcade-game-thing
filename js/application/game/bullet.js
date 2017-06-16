@@ -20,6 +20,7 @@ class Bullet {
         this.speed = {x:0,y:0};
         this.type = BulletType.Friendly;
         this.exist = false;   
+        this.deathTimer = 0;
     }
 
     /*! Create bullet
@@ -37,6 +38,7 @@ class Bullet {
         this.speed.y = sy;
         this.type = type;
         this.exist = true;
+        this.deathTimer = 0;
     }
 
     /*! Update
@@ -44,7 +46,13 @@ class Bullet {
      */
     Update(timeMod)
     {
-        if(this.exist == false) return;
+        if(this.exist == false)
+        {
+            if(this.deathTimer > 0)
+                this.deathTimer -= 1.0 * timeMod;
+
+            return;   
+        }
 
         this.x += this.speed.x * timeMod;
         this.y += this.speed.y * timeMod;
@@ -52,6 +60,7 @@ class Bullet {
         if(this.x < -2.3* (4/3) || this.x > 2.3* (4/3) || this.y < -2.8 || this.y > 2.8)
         {
             this.exist = false;
+            this.deathTimer = 0.0;
         }
     }
 
@@ -60,17 +69,41 @@ class Bullet {
      */
     Draw(g)
     {
-        if(this.exist == false
-        || (this.x < (Camera.x-1.1)* (4/3) || this.x > (Camera.x+1.1)* (4/3) || this.y < Camera.y-1.1 || this.y > Camera.y+1.1)
+        if( (this.exist == false && this.deathTimer <= 0)
+            || (this.x < (Camera.x-1.1)* (4/3) || this.x > (Camera.x+1.1)* (4/3) || this.y < Camera.y-1.1 || this.y > Camera.y+1.1)
         ) return;
 
         var scale = 0.175;
 
+        if(this.exist == false)
+        {
+            if(this.type == BulletType.Special)
+            {
+                scale = 0.25 + (1.0 - 1.0/30.0*this.deathTimer)*0.75;
+            }
+            else
+            {
+                scale = 0.175 + (1.0 - 1.0/30.0*this.deathTimer)*0.125;
+            }
+        }
+
         g.eff.Reset();
         if(this.type == BulletType.Special)
         {
-            g.eff.SetColor(255.0,255.0,255.0,1.0);
-            scale = 0.25;
+            if(this.deathTimer > 0 && !this.exist)
+            {
+                g.eff.SetColor(255.0,255.0,255.0,1.0/30.0 * this.deathTimer);
+            }
+            else
+            {
+                g.eff.SetColor(255.0,255.0,255.0,1.0);
+                scale = 0.25;
+            }
+        }
+        else if(this.deathTimer > 0 && !this.exist)
+        {
+            var trval = 1.0/30.0 * this.deathTimer;
+            g.eff.SetColor(1.0,1.0,1.0,trval);
         }
         g.eff.Use();
 

@@ -27,7 +27,11 @@ class GameObjects
 
         for(var i = 0; i < this.bullets.length; i++)
         {
-            this.bullets[i].Update(timeMod);
+            this.bullets[i].Update(timeMod); // No existence check here, bullet might be "dying"
+            if(this.bullets[i].exist)
+            {
+                this.boss.OnBulletCollision(this.bullets[i]);
+            }
         }
     }
 
@@ -69,7 +73,7 @@ class GameObjects
     {
         for(var i = 0; i < this.bullets.length; i++)
         {
-            if(this.bullets[i].exist == false)
+            if(this.bullets[i].exist == false && this.bullets[i].deathTimer <= 0.0)
             {
                 this.bullets[i].Create(x,y,sx,sy,type);
                 break;
