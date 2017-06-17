@@ -35,6 +35,7 @@ class Player
         this.isShooting = false;
         this.isSpcShooting = false;
         this.spcShootTimer = 0;
+        this.shootPhase = 0;
 
         this.hurtTimer = 0;
     }
@@ -72,7 +73,6 @@ class Player
             {
                 if(Controls.mousestate[0] == State.Down)
                 {
-
                     this.isShooting = true;
                     this.shootSpr.currentFrame = 0;
                     this.shootSpr.currentRow = 1;
@@ -84,6 +84,31 @@ class Player
                         Math.cos(this.angle- Math.PI/2.0) * 0.05,
                         Math.sin(this.angle- Math.PI/2.0) * 0.05,10, BulletType.Friendly
                     );
+
+                    if(Status.level >= 4 || (Status.level >= 2 && this.shootPhase <= Status.level-2) )
+                    {
+                        GameObjects.CreateBullet(
+                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                            Math.cos(this.angle- Math.PI/2.0 - Math.PI/16.0) * 0.05,
+                            Math.sin(this.angle- Math.PI/2.0 - Math.PI/16.0) * 0.05,10, BulletType.Friendly
+                        );
+                    }
+
+                    if(Status.level >= 7 || (Status.level >= 5 && this.shootPhase <= (Status.level-3)-2) )
+                    {
+                        GameObjects.CreateBullet(
+                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                            Math.cos(this.angle- Math.PI/2.0 + Math.PI/16.0) * 0.05,
+                            Math.sin(this.angle- Math.PI/2.0 + Math.PI/16.0) * 0.05,10, BulletType.Friendly
+                        );
+                    }
+
+
+                    this.shootPhase ++;
+                    if(this.shootPhase > 2)
+                        this.shootPhase = 0;
 
                 }
                 else if(Status.bombs > 0 && Controls.mousestate[2] == State.Pressed)
@@ -226,7 +251,14 @@ class Player
         if(this.warpTimer <= 0 && this.hurtTimer <= 0)
         {
             this.hurtTimer = 60;
+            Status.chain = 10;
+            Status.chainExp = 0.0;
             Status.health --;
+
+            if(Status.level > 1)
+            {
+                Status.level --;
+            }
         }
     }
 
@@ -261,7 +293,7 @@ class Player
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                         Math.cos(this.angle- Math.PI/2.0) * 0.075,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.075,500, BulletType.Special
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075,500 * (1 + (Status.level-1)/2.0), BulletType.Special
                     );
 
                 this.isSpcShooting = false;
@@ -272,8 +304,8 @@ class Player
         {
             this.hurtTimer -= 1.0 * timeMod;
 
-            Camera.shake.x = Math.random() * 0.02 - 0.01;
-            Camera.shake.y = Math.random() * 0.02 - 0.01;
+            Camera.shake.x = Math.random() * 0.03 - 0.015;
+            Camera.shake.y = Math.random() * 0.03 - 0.015;
         }
         else
         {

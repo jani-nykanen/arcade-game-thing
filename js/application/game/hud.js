@@ -70,7 +70,9 @@ class HUD
      */
     static DrawMultiplier(g)
     {
-        g.DrawText(this.font,Assets.textures.font24,"x 1.0", 320-72,4,0,-20);
+        var mulStr = "x " + String( Math.floor(Status.chain/10)) + "." + String(Status.chain % 10);
+
+        g.DrawText(this.font,Assets.textures.font24,mulStr, 320-72,4,0,-20);
 
         g.ChangeShader(ShaderType.NoTexture);
 
@@ -85,6 +87,18 @@ class HUD
         g.eff.SetColor(0.5,0.5,0.5,1.0);
         g.eff.Use();
         g.FillRect(320-60+2,22+2,48-4,10-4);
+
+        var size = (48-4) * Status.chainExp;
+        g.eff.SetColor(1.0,1.0,1.0,1.0);
+        g.eff.Use();
+        g.FillRect(320-60+2,22+2,size,10-4);
+
+        if(size > 0)
+        {
+            g.eff.SetColor(0.0,0.0,0.0,1.0);
+            g.eff.Use();
+            g.FillRect(320-60+2+size,22+2,1,10-4);
+        }
 
         g.eff.Reset();
         g.ChangeShader(ShaderType.Default);
@@ -130,19 +144,31 @@ class HUD
         g.eff.Use();
         g.FillRect(6+1,35+1,80-2,15-2);
 
+        g.eff.SetColor(0.5,0.5,0.5,1.0);
+        g.eff.Use();
+        g.FillRect(6+2,35+2,80-4,15-4);
+
         var modif = 1.0;
+        var length = (80-4) * Status.exp;
         for(var i = 0; i < 4; i++)
         {
             modif = 0.25 + i*0.25;
             g.eff.SetColor(1.0*modif,0.625*modif,0.25*modif,1.0);
             g.eff.Use();
-            g.FillRect(6+2,35+2+i,80-4,15-4-i*2);
+            g.FillRect(6+2,35+2+i,length,15-4-i*2);
+        }
+
+        if(Status.exp > 0)
+        {
+            g.eff.SetColor(0,0,0,1.0);
+            g.eff.Use();
+            g.FillRect(6+2+length,35+2,1,15-4);
         }
 
         g.eff.Reset();
         g.ChangeShader(ShaderType.Default);
 
-        g.DrawText(this.font,Assets.textures.font16,"Lvl 1" ,40 - 26,36,-4);
+        g.DrawText(this.font,Assets.textures.font16,"Lvl " + String(Status.level) ,40 - 26,36,-4);
     }
 
     /*! Draw bombs

@@ -51,5 +51,7 @@ class Game extends Scene
         Camera.Limit();
 
         HUD.Update(timeMod);
+
+        Status.Update(timeMod);
     }
 }
