@@ -38,11 +38,6 @@
         if(points != 1000)
         {
             this.exp += points/ (250 * this.level);
-            if(this.exp >= 1.0 && this.level < 9)
-            {
-                this.exp -= 1.0;
-                this.level ++;
-            }
         }
 
         if(this.chainExp >= 1.0)
@@ -89,6 +84,14 @@
 
         if(Controls.keystate[80] == State.Pressed && this.level < 9)
         {
+            this.exp = 1.0;
+        }
+
+        if(this.exp >= 1.0 && this.level < 9)
+        {
+            GameObjects.CreateMessage("Level Up!",160 - 9*8,96,-3);
+
+            this.exp -= 1.0;
             this.level ++;
         }
     }

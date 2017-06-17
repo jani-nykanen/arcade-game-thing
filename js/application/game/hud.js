@@ -171,12 +171,14 @@ class HUD
      */
     static DrawWeaponElements(g)
     {
+        g.eff.SetColor(1.0,1.0,1.0,1.0);
+        g.eff.Use();
+
         g.DrawText(this.font,Assets.textures.font16,"WEAPON:" ,36 - 4*8,22,-3);
     
         g.ChangeShader(ShaderType.NoTexture);
 
-        g.eff.SetColor(1.0,1.0,1.0,1.0);
-        g.eff.Use();
+       
         g.FillRect(6,35,80,15);
 
         g.eff.SetColor(0.0,0.0,0.0,1.0);
@@ -231,9 +233,6 @@ class HUD
             g.eff.Use();
 
             g.DrawBitmapRegion(Assets.textures.hud,0,18,18,18,4,56 + (Status.bombs)*20,18,18);
-
-            g.eff.Reset();
-            g.eff.Use();
         }
     }
 
@@ -242,6 +241,8 @@ class HUD
      */
     static Draw(g)
     {
+        g.eff.Reset();
+        g.eff.Use();
         
         this.DrawHearts(g);
         this.DrawBombs(g);

@@ -6,7 +6,7 @@
 class GameObjects
 {
     /*! Initialize */
-    static Init()
+    static Init(gl)
     {
         this.player = new Player(0,1.5);
         this.boss = new Boss();
@@ -14,6 +14,12 @@ class GameObjects
         for(var i = 0; i < this.bullets.length; i++)
         {
             this.bullets[i] = new Bullet();
+        }
+
+        this.messages = new Array(8);
+        for(var i = 0; i < this.messages.length; i++)
+        {
+            this.messages[i] = new Message(gl);
         }
     }
 
@@ -33,6 +39,11 @@ class GameObjects
             {
                 this.boss.OnBulletCollision(this.bullets[i]);
             }
+        }
+
+        for(var i = 0; i < this.messages.length; i++)
+        {
+            this.messages[i].Update(timeMod);
         }
     }
 
@@ -63,6 +74,17 @@ class GameObjects
         g.SetDepthTesting(true);
     }
 
+    /*! Draw using canvas sized viewport
+     * @param g Graphics object
+     */
+    static DrawInCanvasSize(g)
+    {
+        for(var i = 0; i < this.messages.length; i++)
+        {
+            this.messages[i].Draw(g);
+        }
+    }
+
     /*! A macro for creating a bullet
      * @param x X coordinate
      * @param y Y coordinate
@@ -77,6 +99,24 @@ class GameObjects
             if(this.bullets[i].exist == false && this.bullets[i].deathTimer <= 0.0)
             {
                 this.bullets[i].Create(x,y,sx,sy,power,type,sizeMod);
+                break;
+            }
+        }
+    }
+
+    /*! Create message
+     * @param msg Message
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param speed Speed
+     */
+    static CreateMessage(msg,x,y,speed)
+    {
+        for(var i = 0; i < this.messages.length; i++)
+        {
+            if(this.messages[i].exist == false)
+            {
+                this.messages[i].Create(msg,x,y,speed);
                 break;
             }
         }

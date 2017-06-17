@@ -12,7 +12,7 @@ class Game extends Scene
         Stage.Init(Super);
 
         Camera.Init();
-        GameObjects.Init();
+        GameObjects.Init(Super.graphics.gl);
         HUD.Init(Super.graphics.gl);
         Status.Init();
     }
@@ -49,6 +49,9 @@ class Game extends Scene
             g.eff.Reset();
             g.ChangeShader(ShaderType.Default);
         }
+
+        g.SetDepthTesting(false);
+        GameObjects.DrawInCanvasSize(g);
 
         HUD.Draw(g);
 

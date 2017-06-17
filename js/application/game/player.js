@@ -283,6 +283,8 @@ class Player
                 Status.level --;
                 if(Status.level == 8)
                     Status.exp = 0.0;
+                    
+                GameObjects.CreateMessage("Level Down!",160 - 11*8,96,-3);
             }
 
             Camera.Shake(60,1);
