@@ -10,6 +10,10 @@ class HUD
     {
         this.font = new BitmapFont(gl,16,16);
         this.timeMod = 0;
+        this.oldHbar = 10000.0;
+        this.oldExp = 0.0;
+        this.lastBomb = 3;
+        this.lastBombTimer = 0;
     }
 
     /*! Update HUD
@@ -18,6 +22,41 @@ class HUD
     static Update(timeMod)
     {
         this.timeMod = timeMod;
+
+        if(Status.bossHealth < this.oldHbar)
+        {
+            this.oldHbar -= 20 * timeMod;
+            if(this.oldHbar < Status.bossHealth)
+            {
+                this.oldHbar = Status.bossHealth;
+            }
+            
+        }
+        else
+        {
+             this.oldHbar = Status.bossHealth;
+        }
+
+        if(Status.exp > this.oldExp)
+        {
+            this.oldExp += 0.02 * timeMod;
+            if(this.oldExp > Status.exp)
+                this.oldExp = Status.exp;
+        }
+        else if(Status.exp < this.oldExp)
+        {
+            this.oldExp -= 0.02 * timeMod;
+            if(this.oldExp < Status.exp)
+                this.oldExp = Status.exp;
+        }
+
+        if(Status.bombs != this.lastBomb)
+        {
+            this.lastBomb = Status.bombs;
+            this.lastBombTimer = 30;
+        }
+        else if(this.lastBombTimer > 0)
+            this.lastBombTimer -= 1.0 * timeMod;
     }
 
     /*! Draw health bar
@@ -25,7 +64,7 @@ class HUD
      */
     static DrawHealthBar(g)
     {
-        var length = (Status.bossHealth / 10000) * (320-32) ;
+        var length = (this.oldHbar / 10000) * (320-32) ;
 
         g.ChangeShader(ShaderType.NoTexture);
 
@@ -149,7 +188,7 @@ class HUD
         g.FillRect(6+2,35+2,80-4,15-4);
 
         var modif = 1.0;
-        var length = (80-4) * Status.exp;
+        var length = (80-4) * this.oldExp;
         for(var i = 0; i < 4; i++)
         {
             modif = 0.25 + i*0.25;
@@ -183,6 +222,19 @@ class HUD
         {
             g.DrawBitmapRegion(Assets.textures.hud,0,18,18,18,4,56 + i*20,18,18);
         }    
+
+        if(this.lastBombTimer > 0)
+        {
+            var alpha = 1.0/30.0 * this.lastBombTimer;
+
+            g.eff.SetColor(alpha,alpha,alpha,alpha);
+            g.eff.Use();
+
+            g.DrawBitmapRegion(Assets.textures.hud,0,18,18,18,4,56 + (Status.bombs)*20,18,18);
+
+            g.eff.Reset();
+            g.eff.Use();
+        }
     }
 
     /*! Draw HUD

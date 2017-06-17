@@ -36,6 +36,20 @@ class Game extends Scene
         g.eff.Reset();
         g.eff.Use();
 
+        if(GameObjects.player.hurtTimer > 0)
+        {
+            var transValue = 1.0 - Math.abs(GameObjects.player.hurtTimer-30) / 30.0;
+
+            g.ChangeShader(ShaderType.NoTexture);
+            g.eff.SetColor(1.0,0.0,0.0,0.35*transValue);
+            g.eff.Use();
+
+            g.FillRect(0,0,320,240);
+
+            g.eff.Reset();
+            g.ChangeShader(ShaderType.Default);
+        }
+
         HUD.Draw(g);
 
         g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);
@@ -49,6 +63,7 @@ class Game extends Scene
         Stage.Update(timeMod);
 
         Camera.Limit();
+        Camera.Update(timeMod);
 
         HUD.Update(timeMod);
 

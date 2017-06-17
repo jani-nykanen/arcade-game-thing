@@ -38,7 +38,7 @@
         if(points != 1000)
         {
             this.exp += points/ (250 * this.level);
-            if(this.exp >= 1.0)
+            if(this.exp >= 1.0 && this.level < 9)
             {
                 this.exp -= 1.0;
                 this.level ++;
@@ -62,6 +62,8 @@
      */
     static Update(timeMod)
     {
+        if(this.level == 9)
+            this.exp = 1.0;
 
         if(this.chainWait <= 0)
         {
@@ -85,7 +87,7 @@
             }
         }
 
-        if(Controls.keystate[80] == State.Pressed)
+        if(Controls.keystate[80] == State.Pressed && this.level < 9)
         {
             this.level ++;
         }

@@ -22,6 +22,7 @@ class Bullet {
         this.exist = false;   
         this.deathTimer = 0;
         this.power = 0;
+        this.sizeMod = 1;
     }
 
     /*! Create bullet
@@ -31,7 +32,7 @@ class Bullet {
      * @param sy Speed y
      * @param type Bullet type
      */
-    Create(x,y,sx,sy,pow,type)
+    Create(x,y,sx,sy,pow,type,sizeMod)
     {
         this.x = x;
         this.y = y;
@@ -41,6 +42,7 @@ class Bullet {
         this.type = type;
         this.exist = true;
         this.deathTimer = 0;
+        this.sizeMod = sizeMod === null ? 1 : sizeMod;
     }
 
     /*! Update
@@ -51,7 +53,14 @@ class Bullet {
         if(this.exist == false)
         {
             if(this.deathTimer > 0)
+            {
+                if(this.deathTimer == 30 && this.type == BulletType.Special)
+                {
+                    Camera.Shake(30,4 * this.sizeMod);
+                }
                 this.deathTimer -= 1.0 * timeMod;
+                
+            }
 
             return;   
         }
@@ -82,6 +91,7 @@ class Bullet {
             if(this.type == BulletType.Special)
             {
                 scale = 0.25 + (1.0 - 1.0/30.0*this.deathTimer)*0.75;
+                scale *= this.sizeMod;
             }
             else
             {
@@ -99,7 +109,7 @@ class Bullet {
             else
             {
                 g.eff.SetColor(255.0,255.0,255.0,1.0);
-                scale = 0.25;
+                scale = 0.25 * this.sizeMod;
             }
         }
         else if(this.deathTimer > 0 && !this.exist)

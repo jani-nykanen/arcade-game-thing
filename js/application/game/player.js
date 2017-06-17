@@ -50,7 +50,16 @@ class Player
 
             if(this.spcShootTimer > 60 && Controls.mousestate[2] == State.Up)
             {
+                var sizeMod = this.spcShootTimer / 120.0;
+
                 this.isSpcShooting = false;
+
+                GameObjects.CreateBullet(
+                        this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                        this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                        Math.cos(this.angle- Math.PI/2.0) * 0.075,
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075,sizeMod*(500 * (1 + (Status.level-1)/3.0)), BulletType.Special,sizeMod
+                    );
             }
 
             return;
@@ -78,34 +87,42 @@ class Player
                     this.shootSpr.currentRow = 1;
                     this.shootSpr.changeFrameCount = 0;
 
-                    GameObjects.CreateBullet(
-                        this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
-                        this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
-                        Math.cos(this.angle- Math.PI/2.0) * 0.05,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.05,10, BulletType.Friendly
-                    );
-
-                    if(Status.level >= 4 || (Status.level >= 2 && this.shootPhase <= Status.level-2) )
-                    {
-                        GameObjects.CreateBullet(
-                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
-                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
-                            Math.cos(this.angle- Math.PI/2.0 - Math.PI/16.0) * 0.05,
-                            Math.sin(this.angle- Math.PI/2.0 - Math.PI/16.0) * 0.05,10, BulletType.Friendly
-                        );
-                    }
-
                     if(Status.level >= 7 || (Status.level >= 5 && this.shootPhase <= (Status.level-3)-2) )
                     {
-                        GameObjects.CreateBullet(
-                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
-                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
-                            Math.cos(this.angle- Math.PI/2.0 + Math.PI/16.0) * 0.05,
-                            Math.sin(this.angle- Math.PI/2.0 + Math.PI/16.0) * 0.05,10, BulletType.Friendly
-                        );
+                        for(var i = -1; i <= 1; i++)
+                        {
+                            GameObjects.CreateBullet(
+                            this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                            this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                                Math.cos(this.angle- Math.PI/2.0 + Math.PI/16.0*i) * 0.05,
+                                Math.sin(this.angle- Math.PI/2.0 + Math.PI/16.0*i) * 0.05,10, BulletType.Friendly
+                            );
+                        }
                     }
+                    else if(Status.level >= 4 || (Status.level >= 2 && this.shootPhase <= Status.level-2) )
+                    {
+                        for(var i = -1; i <= 1; i += 2)
+                        {
+                            GameObjects.CreateBullet(
+                            this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                            this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                                Math.cos(this.angle- Math.PI/2.0 - Math.PI/24.0*i) * 0.05,
+                                Math.sin(this.angle- Math.PI/2.0 - Math.PI/24.0*i) * 0.05,10, BulletType.Friendly
+                            );
+                        }
+                    }
+                    else
+                    {
 
+                        GameObjects.CreateBullet(
+                            this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
+                            this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
+                            Math.cos(this.angle- Math.PI/2.0) * 0.05,
+                            Math.sin(this.angle- Math.PI/2.0) * 0.05,10, BulletType.Friendly
+                        );
 
+                    }
+                    
                     this.shootPhase ++;
                     if(this.shootPhase > 2)
                         this.shootPhase = 0;
@@ -202,7 +219,13 @@ class Player
 
         if(this.isShooting)
         {
-            this.shootSpr.Animate(1,0,4,3,timeMod);
+            var speed = 3;
+            if(Status.level == 8)
+                speed = 2.25;
+            else if(Status.level == 9)
+                speed = 1.5;
+
+            this.shootSpr.Animate(1,0,4,speed,timeMod);
             if(this.shootSpr.currentFrame == 4)
             {
                 this.isShooting = false;
@@ -258,7 +281,11 @@ class Player
             if(Status.level > 1)
             {
                 Status.level --;
+                if(Status.level == 8)
+                    Status.exp = 0.0;
             }
+
+            Camera.Shake(60,1);
         }
     }
 
@@ -293,7 +320,7 @@ class Player
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                         Math.cos(this.angle- Math.PI/2.0) * 0.075,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.075,500 * (1 + (Status.level-1)/2.0), BulletType.Special
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075,500 * (1 + (Status.level-1)/3.0), BulletType.Special,1
                     );
 
                 this.isSpcShooting = false;
@@ -303,15 +330,8 @@ class Player
         if(this.hurtTimer > 0)
         {
             this.hurtTimer -= 1.0 * timeMod;
+        }
 
-            Camera.shake.x = Math.random() * 0.03 - 0.015;
-            Camera.shake.y = Math.random() * 0.03 - 0.015;
-        }
-        else
-        {
-            Camera.shake.x = 0;
-            Camera.shake.y = 0;
-        }
 
         this.Controls();
         this.Move(timeMod);

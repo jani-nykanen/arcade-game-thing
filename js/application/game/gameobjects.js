@@ -70,13 +70,13 @@ class GameObjects
      * @param sy Speed y
      * @param type Bullet type
      */
-    static CreateBullet(x,y,sx,sy,power,type)
+    static CreateBullet(x,y,sx,sy,power,type,sizeMod)
     {
         for(var i = 0; i < this.bullets.length; i++)
         {
             if(this.bullets[i].exist == false && this.bullets[i].deathTimer <= 0.0)
             {
-                this.bullets[i].Create(x,y,sx,sy,power,type);
+                this.bullets[i].Create(x,y,sx,sy,power,type,sizeMod);
                 break;
             }
         }
