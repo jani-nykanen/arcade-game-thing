@@ -40,7 +40,7 @@
 
         if(points != 1000)
         {
-            this.exp += points/ (250 * this.level);
+            this.exp += points/ (150 * this.level);
         }
 
         if(this.chainExp >= 1.0)
