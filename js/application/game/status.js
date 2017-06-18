@@ -24,6 +24,9 @@
         this.score = 0;
 
         this.bossHealth = 10000;
+        this.handsDefeated = 0;
+
+        this.time = 0;
 
     }
 
@@ -57,6 +60,8 @@
      */
     static Update(timeMod)
     {
+        this.time += 1.0 * timeMod;
+
         if(this.level == 9)
             this.exp = 1.0;
 
@@ -85,6 +90,11 @@
         if(Controls.keystate[80] == State.Pressed && this.level < 9)
         {
             this.exp = 1.0;
+        }
+
+        if(Controls.keystate[79] == State.Pressed)
+        {
+            Status.bossHealth = 6000;
         }
 
         if(this.exp >= 1.0 && this.level < 9)

@@ -28,6 +28,7 @@ class Assets
             gas : Loader.LoadBitmap("assets/bitmaps/gas.png"),
             platform : Loader.LoadBitmap("assets/bitmaps/platform.png"),
             face1 : Loader.LoadBitmap("assets/bitmaps/face1.png"),
+            face2 : Loader.LoadBitmap("assets/bitmaps/face2.png"),
             plant : Loader.LoadBitmap("assets/bitmaps/plant.png"),
             palm : Loader.LoadBitmap("assets/bitmaps/palm.png"),
             ring : Loader.LoadBitmap("assets/bitmaps/ring.png"),

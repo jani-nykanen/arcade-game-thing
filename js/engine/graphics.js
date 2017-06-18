@@ -230,6 +230,12 @@ class Graphics
 
         for(var i = 0; i < text.length; i++)
         {
+            if(text.charCodeAt(i) == "\n".charCodeAt(0))
+            {
+                this.transf.Translate( -i* (font.fw+offset) * (3/4),font.fh+offset,0.0);
+                continue;
+            }
+
             this.transf.Scale(font.fw,font.fh,1);
             this.transf.Use();
             font._DrawChar(this,tex,text.charCodeAt(i));

@@ -27,6 +27,9 @@ class BossHand
         }
 
         this.hurtTimer = 0;
+
+        this.dead = false;
+        this.deathTimer = 0;
     }
 
     /*! Update 
@@ -34,6 +37,14 @@ class BossHand
      */
     Update(timeMod)
     {
+        if(this.dead)
+        {
+            if(this.deathTimer > 0)
+                this.deathTimer -= 1.0 * timeMod;
+
+            return;
+        }
+
         this.x = Math.sin(this.angle) * this.radius;
         this.y = Math.cos(this.angle) * this.radius;
 
@@ -57,6 +68,7 @@ class BossHand
         {
             this.hurtTimer -= 1.0 * timeMod;
         }
+
     }
 
     /*! On bullet collision
@@ -64,7 +76,7 @@ class BossHand
      */
     OnBulletCollision(b)
     {
-        if(b.exist == false || b.type == BulletType.Enemy) return;
+        if(this.dead || b.exist == false || b.type == BulletType.Enemy) return;
 
         var dist = Math.hypot(this.x-b.x,this.y-b.y);
 
@@ -72,9 +84,26 @@ class BossHand
         {
             Status.bossHealth -= b.power;
             Status.AddPoints(b.type == BulletType.Friendly ? 10 : 1000);
-            this.hurtTimer = 30;
+            if(this.hurtTimer <= 0)
+                this.hurtTimer = 30;
             b.exist = false;
             b.deathTimer = 30;
+
+            if(Status.bossHealth < 10000 - 400 * (Status.handsDefeated+1) - 200 * Math.pow(Status.handsDefeated,2))
+            {
+                this.dead = true;
+                Status.handsDefeated ++;
+                this.deathTimer = 60;
+                Camera.Shake(60,4);
+
+                var timeBonus = 10000 - Math.floor( ( (Status.time - Status.handsDefeated*(60*20) ) / (60 * 30) ) * 10000 );
+
+                if(timeBonus < 0)
+                    timeBonus = 0;
+
+                GameObjects.CreateMessage("Time bonus:\n   " + String(timeBonus),64,96,-3);
+                Status.score += timeBonus;
+            }
         }
     }
 
@@ -83,6 +112,8 @@ class BossHand
      */
     OnPlayerCollision(p)
     {
+        if(this.dead) return;
+
         var dist = Math.hypot(this.x-p.x,this.y-p.y);
 
         if(dist < 0.375)
@@ -96,19 +127,41 @@ class BossHand
      */
     Draw(g)
     {   
+        if(this.dead && this.deathTimer <= 0) return;
+
+        if(this.dead)
+        {
+            var alpha = 1.0/60.0 * this.deathTimer;
+            g.eff.SetColor(alpha,alpha,alpha,alpha);
+            g.eff.Use();
+        }
+
         for(var i = 0; i < this.ringPos.length; i ++)
         {
             g.DrawCenteredBitmap(Assets.textures.ring,this.ringPos[i].x,this.ringPos[i].y,0,0.35,0.35);
         }
 
+        var scale = 0.75;
+
         g.eff.Reset();
-        if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/4) % 2 == 0)
+        if(!this.dead)
         {
-            g.eff.SetColor(2.0,0.5,0.5,1.0);
+            if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/4) % 2 == 0)
+            {
+                g.eff.SetColor(2.0,0.5,0.5,1.0);
+            }
+        }
+        else
+        {
+            var alpha = 1.0/60.0 * this.deathTimer;
+            var whiteness = 255 * (1-alpha) + 1.0;
+            g.eff.SetColor(whiteness,whiteness,whiteness,alpha);
+
+            scale += 1.0-alpha;
         }
         g.eff.Use();
 
-        g.DrawCenteredBitmap(Assets.textures.palm,this.x,this.y,-this.angle - Math.PI /2,0.75,0.75);
+        g.DrawCenteredBitmap(Assets.textures.palm,this.x,this.y,-this.angle - Math.PI /2,scale,scale);
 
         g.eff.Reset();
         g.eff.Use();

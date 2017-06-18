@@ -51,9 +51,8 @@ class Game extends Scene
         }
 
         g.SetDepthTesting(false);
-        GameObjects.DrawInCanvasSize(g);
-
         HUD.Draw(g);
+        GameObjects.DrawInCanvasSize(g);
 
         g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);
         
