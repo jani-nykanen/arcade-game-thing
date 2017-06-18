@@ -37,7 +37,7 @@ class BossBase
             else
             {
                 this.plantSize -= 0.005 * timeMod;
-                if(this.plantSize < 0.625)
+                if(this.plantSize < 0.45)
                 {
                     this.plantDead = true;
                 }
