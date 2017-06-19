@@ -60,6 +60,9 @@
      */
     static Update(timeMod)
     {
+        if(this.bossHealth < 0)
+            this.bossHealth = 0;
+
         this.time += 1.0 * timeMod;
 
         if(this.level == 9)
@@ -87,14 +90,31 @@
             }
         }
 
-        if(Controls.keystate[80] == State.Pressed && this.level < 9)
+        /* Debug codes
+         * @todo Add own class for them
+         */
+        if(Controls.keystate[225] == State.Down)
         {
-            this.exp = 1.0;
-        }
+            if(Controls.keystate[80] == State.Pressed && this.level < 9)
+            {
+                this.exp = 1.0;
+            }
 
-        if(Controls.keystate[79] == State.Pressed)
-        {
-            Status.bossHealth = 6000;
+            if(Controls.keystate[79] == State.Pressed)
+            {
+                Status.bossHealth = 6000;
+            }
+
+            if(Controls.keystate[73] == State.Pressed)
+            {
+                for(var i = 0; i < GameObjects.boss.hands.length; i++)
+                {
+                    GameObjects.boss.hands[i].dead = true;
+                    GameObjects.boss.hands[i].deathTimer = 60;
+                }
+                Status.bossHealth = 3001;
+                Status.handsDefeated = 4;
+            }
         }
 
         if(this.exp >= 1.0 && this.level < 9)

@@ -58,7 +58,7 @@ class Player
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                         Math.cos(this.angle- Math.PI/2.0) * 0.075,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.075,sizeMod*(500 * (1 + (Status.level-1)/3.0)), BulletType.Special,sizeMod
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075,sizeMod*(750 * (1 + (Status.level-1)/2.8)), BulletType.Special,sizeMod
                     );
             }
 
@@ -95,7 +95,7 @@ class Player
                             this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                             this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                                 Math.cos(this.angle- Math.PI/2.0 + Math.PI/16.0*i) * 0.05,
-                                Math.sin(this.angle- Math.PI/2.0 + Math.PI/16.0*i) * 0.05,10, BulletType.Friendly
+                                Math.sin(this.angle- Math.PI/2.0 + Math.PI/16.0*i) * 0.05,20, BulletType.Friendly
                             );
                         }
                     }

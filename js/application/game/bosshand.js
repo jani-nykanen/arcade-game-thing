@@ -8,7 +8,7 @@ class BossHand
     /*! Constructor 
      * @param angle Hand angle
      */
-    constructor(angle,index)
+    constructor(angle)
     {
         this.angle = angle;
         this.angleSpeed = 0;
@@ -19,8 +19,6 @@ class BossHand
         this.radiusSpeed = 0.0;
         this.radStart = 1.65;
         this.radMod = angle;
-
-        this.index = index;
 
         this.x = 0;
         this.y = 0;
@@ -146,10 +144,8 @@ class BossHand
         {
             dist =  0.5 + ( (this.radius-0.5)/this.ringPos.length * i );
 
-            var sign = (this.index == 0 || this.index == 2) ? 1 : 1;
-
-            this.ringPos[i].x = Math.cos(this.angle) * dist * sign;
-            this.ringPos[i].y = Math.sin(this.angle) * dist * sign;
+            this.ringPos[i].x = Math.cos(this.angle) * dist;
+            this.ringPos[i].y = Math.sin(this.angle) * dist;
         }
     
         if(this.hurtTimer > 0)
