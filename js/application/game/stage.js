@@ -18,6 +18,9 @@ class Stage
 
         this.spaceFrame = new Framebuffer(Super.graphics.gl,320,240);
         this.canvasFrame = Super.canvas;
+
+        this.phase = 1;
+        this.phaseChangeTimer = 0;
     }
 
     /*! Draw space
@@ -40,7 +43,23 @@ class Stage
         g.eff.SetFog(0,0,0,3.5,8);
         g.eff.Use();
         
-        g.DrawMesh(Shapes.cylinder,Assets.textures.space.tex);
+        g.DrawMesh(Shapes.cylinder,Stage.phase == 1 ? Assets.textures.space.tex : Assets.textures.space2.tex);
+
+        if(Stage.phase == 2)
+        {
+            g.ChangeShader(ShaderType.Default);
+            g.eff.Use();
+
+            g.transf.Perspective(75.0,320.0/240.0,0.1,100.0);
+             g.transf.View(vec3.fromValues(0,0,-1),vec3.fromValues(0,0,1),vec3.fromValues(0,1,0));
+            g.transf.Identity();
+            g.transf.Translate(0,0,7);
+            g.transf.RotateQuaternion(0,0,Stage.sunAngle * 8);
+            g.transf.Use();
+
+            g.DrawMesh(Shapes.planeCenter,Assets.textures.spiral.tex);
+
+        }
     }
 
     /*! Draw sun
@@ -59,6 +78,11 @@ class Stage
         g.eff.Reset();
         g.eff.Use();
         g.DrawBitmap({width: 320, height: 240, tex : this.spaceFrame.texture},0,0);
+
+        if(this.phase == 2)
+        {
+            return;
+        }
 
         var shineMod = 0.8 + 0.1 * (Math.sin(this.shineValue) +1);
         g.eff.SetColor(shineMod,shineMod,shineMod,shineMod);
@@ -141,13 +165,29 @@ class Stage
      */
     static Update(timeMod)
     {
-        this.spacePos += 0.025 * timeMod;
+        this.spacePos += (Status.phase == 1 ? 0.025 : 0.06) * timeMod;
         if(this.spacePos >= 1.0)
             this.spacePos -= 1.0;
 
         this.sunAngle  += 0.005 * timeMod;
         this.shineValue += 0.025 * timeMod;
         this.earthAngle += 0.005 * timeMod;
+
+        if(this.phase != Status.phase && this.phaseChangeTimer <= 0)
+        {
+            this.phaseChangeTimer = 120;
+            Camera.Shake(120,8);
+        }
+
+        if(this.phaseChangeTimer > 0)
+        {
+            this.phaseChangeTimer -= 1.0 * timeMod;
+            if(this.phaseChangeTimer <= 60 && this.phase != Status.phase)
+            {
+                Status.bossHealth = 10000;
+                this.phase = Status.phase;
+            }
+        }
     }
 
     /*! Draw
@@ -161,7 +201,29 @@ class Stage
         this.DrawSmallPlanets(g);
         
         g.ChangeShader(ShaderType.Default);
-        g.SetFiltering(TextureFilter.Nearest);
+        g.SetFiltering(TextureFilter.Linear);
+    }
+
+    /*! Draw some nice whiteness
+     * @param g Graphics object
+     */
+    static DrawWhiteness(g)
+    {
+        g.ChangeShader(ShaderType.NoTexture);
+
+        g.transf.Ortho2D(320,240);
+        g.transf.Identity();
+
+        var alpha = 1.0 - 1.0/60 * (Math.abs(this.phaseChangeTimer - 60));
+
+        g.eff.SetColor(1.0,1.0,1.0,alpha);
+        g.eff.Use();
+
+        g.FillRect(0,0,320,240);
+
+        g.ChangeShader(ShaderType.Default);
+        g.eff.Reset();
+        g.eff.Use();
     }
 
     /*! Draw stage floor
@@ -174,7 +236,10 @@ class Stage
         var transparencyValue = 0.8 + (Math.sin(this.sunAngle*8)*0.1);
 
         g.eff.Reset();
-        g.eff.SetColor(1.0,1.0,1.0,transparencyValue);
+        if(Status.phase == 1)
+            g.eff.SetColor(1.0,1.0,1.0,transparencyValue);
+        else
+            g.eff.SetColor(3.0,1.0,2.0,transparencyValue);
         g.eff.Use();
 
         g.DrawCenteredBitmap(Assets.textures.platform,0,0,0,2.5,2.5);

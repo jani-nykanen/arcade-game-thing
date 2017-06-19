@@ -21,12 +21,11 @@ class Game extends Scene
     Draw(g)
     {
         g.ChangeShader(ShaderType.Default);
-
         g.SetDepthTesting(false);
-
         g.ClearScreen(0.75,0.75,0.75);
 
         Stage.Draw(g);
+        g.SetDepthTesting(false);
         GameObjects.Draw(g);
 
         g.transf.Ortho2D(this.Super.canvas.width,this.Super.canvas.height);
@@ -54,6 +53,8 @@ class Game extends Scene
         HUD.Draw(g);
         GameObjects.DrawInCanvasSize(g);
 
+        g.eff.Reset();
+        g.eff.Use();
         g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);
         
     }

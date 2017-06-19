@@ -21,6 +21,7 @@ class Assets
             font24 : Loader.LoadBitmap("assets/bitmaps/font24.png"),
             cursor : Loader.LoadBitmap("assets/bitmaps/cursor.png"),
             space : Loader.LoadBitmap("assets/bitmaps/space.png"),
+            space2 : Loader.LoadBitmap("assets/bitmaps/space2.png"),
             sun : Loader.LoadBitmap("assets/bitmaps/sun.png"),
             sunShine : Loader.LoadBitmap("assets/bitmaps/sun_shine.png"),
             earth : Loader.LoadBitmap("assets/bitmaps/earth.png"),
@@ -35,6 +36,8 @@ class Assets
             bullet : Loader.LoadBitmap("assets/bitmaps/bullet.png"),
             hud : Loader.LoadBitmap("assets/bitmaps/hud.png"),
             circle : Loader.LoadBitmap("assets/bitmaps/circle.png"),
+            spiral : Loader.LoadBitmap("assets/bitmaps/spiral.png"),
+            heart: Loader.LoadBitmap("assets/bitmaps/heart.png"),
         }
     }
 

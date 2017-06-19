@@ -13,6 +13,7 @@ class Boss
         {
             this.hands[i] = new BossHand(Math.PI/4 + Math.PI /2 * i,i);
         }
+        this.heart = new Heart();
     }
 
     /*! Update 
@@ -26,6 +27,11 @@ class Boss
         {
             this.hands[i].Update(timeMod);
         }
+
+        if(Stage.phase == 2)
+        {
+            this.heart.Update(timeMod);
+        }
     }
 
     /*! Check bullet collision for each part
@@ -38,6 +44,11 @@ class Boss
             this.hands[i].OnBulletCollision(b);
         }
         this.base.OnBulletCollision(b);
+
+        if(Stage.phase == 2)
+        {
+            this.heart.OnBulletCollision(b);
+        }
     }
 
     /*! On player collision
@@ -50,6 +61,11 @@ class Boss
             this.hands[i].OnPlayerCollision(p);
         }
         this.base.OnPlayerCollision(p);
+
+        if(Stage.phase == 2)
+        {
+            this.heart.OnPlayerCollision(p);
+        }
     }
 
     /*! Draw
@@ -62,9 +78,14 @@ class Boss
             this.hands[i].Draw(g);
         }
 
-        this.base.Draw(g);
-
-        
+        if(Stage.phase == 2)
+        {
+            this.heart.Draw(g);
+        }
+        else
+        {
+            this.base.Draw(g);
+        }
     }
     
 }

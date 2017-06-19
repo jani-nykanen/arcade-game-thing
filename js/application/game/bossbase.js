@@ -53,7 +53,6 @@ class BossBase
     {
         var pangle = Math.atan2(this.y-GameObjects.player.y,this.x-GameObjects.player.x);
         
-
         this.target.x = -Math.cos(pangle) * 0.035;
         this.target.y = -Math.sin(pangle) * 0.035;
 
@@ -87,6 +86,9 @@ class BossBase
         {
             this.x = Math.cos(this.angle)*2.45;
             this.y = Math.sin(this.angle)*2.45;
+
+            this.speed.x *= -1;
+            this.speed.y *= -1;
         }
         this.CalculateRingPos();
     }
@@ -99,7 +101,13 @@ class BossBase
         if(this.dead)
         {
             if(this.deathTimer > 0)
+            {
                 this.deathTimer -= 0.5 * timeMod;
+                if(this.deathTimer <= 0)
+                {
+                    Status.phase = 2;
+                }
+            }
             return;
         }
 

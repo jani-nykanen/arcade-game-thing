@@ -47,6 +47,17 @@ class GameObjects
         }
     }
 
+    /*! Set viewport for game objects
+     * @param g 
+     */
+    static SetGObjectViewport(g)
+    {
+        g.transf.Identity();
+        g.transf.Ortho2D(2.0 * (4.0/3.0),2.0);
+        g.transf.Translate( (1.0 - Camera.x - Camera.shake.x) * (4/3),1.0 - Camera.y - Camera.shake.y,0.0);
+        g.transf.Use();
+    }
+
     /*! Draw
      * @param g Graphics object
      */
@@ -56,14 +67,17 @@ class GameObjects
 
         g.ChangeShader(ShaderType.Default);
 
-        g.transf.Identity();
-        g.transf.Ortho2D(2.0 * (4.0/3.0),2.0);
-        g.transf.Translate( (1.0 - Camera.x - Camera.shake.x) * (4/3),1.0 - Camera.y - Camera.shake.y,0.0);
-        g.transf.Use();
+        this.SetGObjectViewport(g);
 
         Stage.DrawFloor(g);
-
         this.boss.Draw(g);
+
+        if(Stage.phaseChangeTimer > 0)
+        {
+            Stage.DrawWhiteness(g);
+            this.SetGObjectViewport(g);
+        }
+
         this.player.Draw(g);
 
         for(var i = 0; i < this.bullets.length; i++)

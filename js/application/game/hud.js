@@ -32,6 +32,15 @@ class HUD
             }
             
         }
+        else if(Status.bossHealth > this.oldHbar)
+        {
+            this.oldHbar += 50 * timeMod;
+            if(this.oldHbar > Status.bossHealth)
+            {
+                this.oldHbar = Status.bossHealth;
+            }
+            
+        }
         else
         {
              this.oldHbar = Status.bossHealth;
@@ -100,7 +109,10 @@ class HUD
         g.eff.Reset();
         g.ChangeShader(ShaderType.Default);
 
-        g.DrawText(this.font,Assets.textures.font16,"Undefined One" ,160 - 10.5*8,240-22,0);
+        if(Stage.phase == 1)
+            g.DrawText(this.font,Assets.textures.font16,"Undefined One" ,160 - 10.5*8,240-22,0);
+        else
+            g.DrawText(this.font,Assets.textures.font16,"Heart of the Plant" ,160 - 13.5*8,240-22,0);
 
     }
 

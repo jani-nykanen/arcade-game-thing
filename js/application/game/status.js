@@ -26,6 +26,8 @@
         this.bossHealth = 10000;
         this.handsDefeated = 0;
 
+        this.phase = 1;
+
         this.time = 0;
 
     }
