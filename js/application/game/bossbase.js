@@ -301,6 +301,12 @@ class BossBase
         g.eff.Reset();
         if(this.faceDead && this.faceDeathTimer <= 0)
         {
+            if(this.colorModTimer > 0)
+            {
+                var mod = 1.0  - Math.abs(this.colorModTimer-10)/10;
+                g.eff.SetColor(1.0+3*mod,1.0+3*mod,1.0+3*mod,1.0);
+            }
+
             g.eff.Use();
 
             g.DrawCenteredBitmap(Assets.textures.plant,0,0,0,1.75*this.plantSize,1.75*this.plantSize);
