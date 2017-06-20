@@ -372,7 +372,7 @@ class Player
      */
     OnBulletCollision(b)
     {
-        if(b.exist == false || b.type != BulletType.Enemy || this.hurtTimer > 0) return;
+        if(this.warpTimer > 0 || b.exist == false || b.type != BulletType.Enemy || this.hurtTimer > 0) return;
 
         var dist = Math.hypot(this.x-b.x,this.y-b.y);
         if(dist < 0.1)

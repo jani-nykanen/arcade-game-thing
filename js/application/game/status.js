@@ -15,6 +15,7 @@
     static Reset()
     {
         this.health = 5;
+        this.healthRestore = 0;
         this.bombs = 3;
         this.level = 1;
         this.exp = 0;
@@ -66,6 +67,18 @@
             this.bossHealth = 0;
 
         this.time += 1.0 * timeMod;
+
+        if(this.health < 5)
+        {
+            this.healthRestore += 0.0025 * timeMod;
+            if(this.healthRestore >= 1.0)
+            {
+                this.health ++;
+                this.healthRestore -= 1.0;
+                if(this.health == 5)
+                    this.healthRestore = 0;
+            }
+        }
 
         if(this.level == 9)
             this.exp = 1.0;

@@ -29,6 +29,10 @@ class BossBase
 
         this.dead = false;
         this.deathTimer = 0;
+
+        this.shootTimer = 120 + Math.random() * 60;
+        this.colorModTimer = 0;
+        this.shootPhase = 0;
     }
 
     /*! Calculate ring positions */
@@ -91,6 +95,59 @@ class BossBase
             this.speed.y *= -1;
         }
         this.CalculateRingPos();
+    }
+
+    /*! Shoot bullets */
+    Shoot()
+    {
+        var sx,sy;
+
+        for(var angle = 0; angle < Math.PI*2; angle += Math.PI*2 / 24 )
+        {
+            sx =  -Math.cos(angle) * 0.0135;
+            sy =  -Math.sin(angle) * 0.0135;
+
+            GameObjects.CreateBullet(
+                        0,
+                        0,
+                        sx,
+                        sy,1, BulletType.Enemy);
+        }
+    }
+
+    /*! Shooting routines 
+     * @param timeMod Time modifier 
+     */
+    ShootingRoutines(timeMod)
+    {
+        this.shootTimer -= 1.0 * timeMod;
+        if(this.shootTimer <= 0.0)
+        {
+            this.shootTimer += 120 + Math.random()*30 + this.shootPhase *60;
+
+            if(this.shootPhase == 0)
+                this.Shoot();
+            else
+            {
+                for(var i = 0; i < GameObjects.bullets.length; i++)
+                {
+                    if(GameObjects.bullets[i].exist && GameObjects.bullets[i].type == BulletType.Enemy)
+                    {
+                        GameObjects.bullets[i].speed.x  *= -1.25;
+                        GameObjects.bullets[i].speed.y  *= -1.25;
+                    }
+                }
+            }
+                
+            this.shootPhase ++;
+            if(this.shootPhase == 3)
+                this.shootPhase = 0;
+
+            this.colorModTimer = 20;
+        }
+
+        if(this.colorModTimer > 0)
+            this.colorModTimer -= 1.0 * timeMod;
     }
 
     /*! Update 
@@ -173,6 +230,7 @@ class BossBase
             if(this.faceDead && this.faceDeathTimer <= 0.0)
             {
                 this.SpecialMovement(timeMod);
+                this.ShootingRoutines(timeMod);
                 this.plantScaleMod += 0.05 * timeMod;
                 this.plantSize = 0.5 + 0.025 * Math.sin(this.plantScaleMod);
             }

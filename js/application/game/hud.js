@@ -176,6 +176,12 @@ class HUD
             else
                 g.DrawBitmapRegion(Assets.textures.hud,0,0,18,18,2+i*20,4,18,18);
         }    
+
+        if(Status.health < 5)
+        {
+            var width = Math.floor(Status.healthRestore * 18);
+            g.DrawBitmapRegion(Assets.textures.hud,0,0,width,18,2+(Status.health*20),4,width,18);
+        }
     }
 
     /*! Draw weapon related HUD elements
