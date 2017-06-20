@@ -38,6 +38,7 @@ class GameObjects
             if(this.bullets[i].exist)
             {
                 this.boss.OnBulletCollision(this.bullets[i]);
+                this.player.OnBulletCollision(this.bullets[i]);
             }
         }
 

@@ -40,7 +40,7 @@
         this.score += points * (this.chain);
         this.chainExp += points/this.chain / 10.0;
 
-        if(points != 1000)
+        if(points < 1000)
         {
             this.exp += points/ (150 * this.level);
         }
@@ -114,7 +114,7 @@
                     GameObjects.boss.hands[i].dead = true;
                     GameObjects.boss.hands[i].deathTimer = 60;
                 }
-                Status.bossHealth = 3001;
+                Status.bossHealth = 4001;
                 Status.handsDefeated = 4;
             }
         }

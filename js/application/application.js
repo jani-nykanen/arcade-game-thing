@@ -134,7 +134,21 @@ class Application extends ApplicationCore
      */
     DrawLoadingScreen(g)
     {
+        g.ChangeShader(ShaderType.Default);
+
         g.ClearScreen(0.0,0.0,0.0);
+
+        g.transf.Ortho2D(320,240);
+        g.transf.Identity();
+        g.transf.Use();
+
+        g.eff.Reset();
+        g.eff.Use();
+
+        if(Loader.currentlyLoaded > 0)
+        {
+            g.DrawText(HUD.font,Assets.textures.font16,"Loading...",32,32,0,-1);
+        }
     }
 
     /*! Draw canvas to the screen

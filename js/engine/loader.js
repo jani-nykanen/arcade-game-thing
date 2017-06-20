@@ -32,7 +32,7 @@
         var tex = gl.createTexture();
         var img = new Image();
         var bmp = new Bitmap(img,tex);
-
+        
         img.onload = function() 
         { 
             Loader.currentlyLoaded ++;
@@ -43,6 +43,25 @@
         this.loadableData ++;
 
         return bmp;
+     }
+
+     /*! Load music track
+      * @param src Source path
+      */
+     static LoadMusic(src)
+     {
+        var track = new Audio();
+
+        track.onload = function()
+        {
+            Loader.currentlyLoaded ++;
+        }
+        track.src = src;
+
+        var m = new Music();
+        m.track = track;
+
+        return m;
      }
 
      /*! Is every file loaded

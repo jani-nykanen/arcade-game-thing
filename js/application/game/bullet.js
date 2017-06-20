@@ -119,6 +119,8 @@ class Bullet {
         }
         g.eff.Use();
 
-        g.DrawCenteredBitmap(Assets.textures.bullet,this.x,this.y,0,scale,scale);
+        // g.DrawCenteredBitmap(Assets.textures.bullet,this.x,this.y,0,scale,scale);
+        var ix = this.type == BulletType.Enemy ? 1 : 0;
+        g.DrawRegularBitmapPortion(Assets.textures.bullet,this.x,this.y,2,ix,0,0,scale,scale);
     }
 }

@@ -107,7 +107,7 @@ class Player
                             this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                             this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                                 Math.cos(this.angle- Math.PI/2.0 - Math.PI/24.0*i) * 0.05,
-                                Math.sin(this.angle- Math.PI/2.0 - Math.PI/24.0*i) * 0.05,10, BulletType.Friendly
+                                Math.sin(this.angle- Math.PI/2.0 - Math.PI/24.0*i) * 0.05,20, BulletType.Friendly
                             );
                         }
                     }
@@ -118,7 +118,7 @@ class Player
                             this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                             this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                             Math.cos(this.angle- Math.PI/2.0) * 0.05,
-                            Math.sin(this.angle- Math.PI/2.0) * 0.05,10, BulletType.Friendly
+                            Math.sin(this.angle- Math.PI/2.0) * 0.05,20, BulletType.Friendly
                         );
 
                     }
@@ -322,7 +322,7 @@ class Player
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),
                         Math.cos(this.angle- Math.PI/2.0) * 0.075,
-                        Math.sin(this.angle- Math.PI/2.0) * 0.075,500 * (1 + (Status.level-1)/3.0), BulletType.Special,1
+                        Math.sin(this.angle- Math.PI/2.0) * 0.075,750 * (1 + (Status.level-1)/2.8), BulletType.Special,1
                     );
 
                 this.isSpcShooting = false;
@@ -364,6 +364,22 @@ class Player
         for(var i = 0; i < this.gas.length; i++)
         {
             this.gas[i].Update(timeMod);
+        }
+    }
+
+    /*! On bullet collision
+     * @param b Bullet
+     */
+    OnBulletCollision(b)
+    {
+        if(b.exist == false || b.type != BulletType.Enemy || this.hurtTimer > 0) return;
+
+        var dist = Math.hypot(this.x-b.x,this.y-b.y);
+        if(dist < 0.1)
+        {
+            this.Hurt();
+            b.exist = false;
+            b.deathTimer = 30;
         }
     }
 

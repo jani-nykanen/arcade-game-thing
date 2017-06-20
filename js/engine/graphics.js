@@ -152,6 +152,10 @@ class Graphics
         this.filter = TextureFilter.Nearest;
 
         this.lastTexture = 0;
+
+        this.regularSprites = new Array();
+        this.regularSprites[2] = new RegularSprite(this.gl,2);
+        this.regularSprites[4] = new RegularSprite(this.gl,4);
 		
     }
 
@@ -328,6 +332,36 @@ class Graphics
         this.transf.Use();
 
         this.DrawMesh(Shapes.planeCenter,bmp.tex);
+
+        this.transf.Pop();
+    }
+
+    /*! Draw a regular bitmap portion
+     * @param bmp Bitmap
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param s Size
+     * @param ix Index X
+     * @param iy Index Y
+     * @param angle Angle
+     * @param sx Scale x
+     * @param sy Scale y
+     */
+    DrawRegularBitmapPortion(bmp,x,y,s,ix,iy,angle,sx,sy)
+    {
+        if(this.regularSprites[s] == null)
+        {
+            this.regularSprites[s] = new RegularSprite(s);
+        }
+
+        this.transf.Push();
+
+        this.transf.Translate(x,y,0.0);
+        if(angle != 0) this.transf.RotateQuaternion(0,0,angle);
+        this.transf.Scale(sx,sy,1);
+        this.transf.Use();
+
+        this.regularSprites[s].Draw(this,bmp.tex,ix,iy);
 
         this.transf.Pop();
     }

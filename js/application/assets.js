@@ -28,8 +28,7 @@ class Assets
             bee : Loader.LoadBitmap("assets/bitmaps/bee_anim.png"),
             gas : Loader.LoadBitmap("assets/bitmaps/gas.png"),
             platform : Loader.LoadBitmap("assets/bitmaps/platform.png"),
-            face1 : Loader.LoadBitmap("assets/bitmaps/face1.png"),
-            face2 : Loader.LoadBitmap("assets/bitmaps/face2.png"),
+            face : Loader.LoadBitmap("assets/bitmaps/face1.png"),
             plant : Loader.LoadBitmap("assets/bitmaps/plant.png"),
             palm : Loader.LoadBitmap("assets/bitmaps/palm.png"),
             ring : Loader.LoadBitmap("assets/bitmaps/ring.png"),
@@ -37,7 +36,12 @@ class Assets
             hud : Loader.LoadBitmap("assets/bitmaps/hud.png"),
             circle : Loader.LoadBitmap("assets/bitmaps/circle.png"),
             spiral : Loader.LoadBitmap("assets/bitmaps/spiral.png"),
-            heart: Loader.LoadBitmap("assets/bitmaps/heart.png"),
+            heart: Loader.LoadBitmap("assets/bitmaps/heart.png"),  
+        };
+
+        this.music = 
+        {
+            theme : Loader.LoadMusic("assets/audio/theme.ogg"),
         }
     }
 

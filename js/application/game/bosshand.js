@@ -22,6 +22,9 @@ class BossHand
 
         this.x = 0;
         this.y = 0;
+        // Delta x,y, to determine speed
+        this.dx = 0;
+        this.dy = 0;
 
         this.ringPos = new Array(6);
         for(var i = 0; i < this.ringPos.length; i++)
@@ -33,6 +36,9 @@ class BossHand
 
         this.dead = false;
         this.deathTimer = 0;
+
+        this.shootTimer = 240 + Math.random() * 180;
+        this.colorModTimer = 0;
     }
 
     /*! Update hand angle
@@ -122,11 +128,35 @@ class BossHand
         }
     }
 
+    /*! Shoot some bullets */
+    Shoot()
+    {
+        var sx,sy;
+
+        var speedMod = 1.0;
+        speedMod += 0.25 * (Status.handsDefeated);
+
+        for(var angle = 0; angle < Math.PI*2; angle += Math.PI*2 / (8 + Status.handsDefeated*2) )
+        {
+            sx = this.dx/2 -Math.cos(angle) * 0.015*speedMod;
+            sy = this.dy/2 -Math.sin(angle) * 0.015*speedMod;
+
+            GameObjects.CreateBullet(
+                        this.x,
+                        this.y,
+                        sx,
+                        sy,1, BulletType.Enemy);
+        }
+    }
+
     /*! Update 
      * @param timeMod Time modifier 
      */
     Update(timeMod)
     {
+        var oldx = this.x;
+        var oldy = this.y;
+
         if(this.dead)
         {
             if(this.deathTimer > 0)
@@ -152,6 +182,20 @@ class BossHand
         {
             this.hurtTimer -= 1.0 * timeMod;
         }
+
+        this.shootTimer -= 1.0 * timeMod;
+        if(this.shootTimer <= 0.0)
+        {
+            this.shootTimer += 120 + Math.random()*120 - 15*Status.handsDefeated;
+            this.Shoot();
+            this.colorModTimer = 20;
+        }
+
+        if(this.colorModTimer > 0)
+            this.colorModTimer -= 1.0 * timeMod;
+
+        this.dx = this.x - oldx;
+        this.dy = this.y - oldy;
 
     }
 
@@ -233,6 +277,11 @@ class BossHand
             if(this.hurtTimer > 0 && Math.floor(this.hurtTimer/4) % 2 == 0)
             {
                 g.eff.SetColor(2.0,0.5,0.5,1.0);
+            }
+            else if(this.colorModTimer > 0)
+            {
+                var mod = 1.0  - Math.abs(this.colorModTimer-10)/10;
+                g.eff.SetColor(1.0+3*mod,1.0+3*mod,1.0+3*mod,1.0);
             }
         }
         else

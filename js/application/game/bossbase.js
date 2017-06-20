@@ -116,6 +116,15 @@ class BossBase
             this.dead = true;
             this.deathTimer = 60;
             Camera.Shake(120,8.0);
+
+            var timeBonus = Math.floor(150000 - Status.time);
+
+            if(timeBonus < 0)
+                timeBonus = 0;
+
+            GameObjects.CreateMessage("Time bonus:\n   " + String(timeBonus),64,96,-3);
+            Status.score += timeBonus;
+
             return;
         }
 
@@ -146,11 +155,19 @@ class BossBase
             if(this.faceDeathTimer > 0)
                 this.faceDeathTimer -= 0.5 * timeMod;
 
-            if(!this.faceDead && Status.bossHealth <= 3000)
+            if(!this.faceDead && Status.bossHealth <= 4000)
             {
                 this.faceDeathTimer = 60;
                 this.faceDead = true;
                 Camera.Shake(60,6);
+
+                var timeBonus = Math.floor(100000 - Status.time);
+
+                if(timeBonus < 0)
+                    timeBonus = 0;
+
+                GameObjects.CreateMessage("Time bonus:\n   " + String(timeBonus),64,96,-3);
+                Status.score += timeBonus;
             }
 
             if(this.faceDead && this.faceDeathTimer <= 0.0)
@@ -167,7 +184,7 @@ class BossBase
      */
     OnBulletCollision(b)
     {
-        if(b.exist == false || this.dead) return;
+        if(b.exist == false || b.type == BulletType.Enemy || this.dead) return;
 
         var dist = Math.hypot(this.x-b.x,this.y-b.y);
 
@@ -179,7 +196,7 @@ class BossBase
         else if(dist < 0.45)
         {
             Status.bossHealth -= b.power;
-            Status.AddPoints(b.type == BulletType.Friendly ? 10 : 1000);
+            Status.AddPoints(b.type == BulletType.Friendly ? 15 : 1500);
             if(this.hurtTimer <= 0)
                 this.hurtTimer = 30;
             b.exist = false;
@@ -263,8 +280,8 @@ class BossBase
         }
         g.eff.Use();
 
-        g.DrawCenteredBitmap(Status.bossHealth <= 3000 ? Assets.textures.face2 : Assets.textures.face1,
-            this.x,this.y,0,1.0*scale,1.0*scale);
+        g.DrawRegularBitmapPortion(Assets.textures.face,
+            this.x,this.y,2,Status.bossHealth <= 4000 ? 1 : 0,0 ,0,1.0*scale,1.0*scale);
 
         if(this.faceDead && this.faceDeathTimer > 0)
         {
@@ -272,8 +289,8 @@ class BossBase
             g.eff.SetColor(alpha,alpha,alpha,alpha);
             g.eff.Use();
 
-            g.DrawCenteredBitmap(Assets.textures.face1,
-                this.x,this.y,0,1.0 + 2*(1-alpha),1.0 + 2*(1-alpha));
+            g.DrawRegularBitmapPortion(Assets.textures.face,
+                this.x,this.y,2,0,0,0,1.0 + 2*(1-alpha),1.0 + 2*(1-alpha));
         }
     }
 }
