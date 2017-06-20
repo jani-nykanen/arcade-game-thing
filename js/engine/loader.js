@@ -52,16 +52,17 @@
      {
         var track = new Audio();
 
-        track.onload = function()
-        {
-            Loader.currentlyLoaded ++;
-        }
         track.src = src;
+
+        track.addEventListener('canplaythrough', function() 
+        { 
+            Loader.currentlyLoaded ++;
+        }, false);
 
         var m = new Music();
         m.track = track;
 
-         this.loadableData ++;
+        this.loadableData ++;
 
         return m;
      }
