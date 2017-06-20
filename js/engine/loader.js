@@ -61,6 +61,8 @@
         var m = new Music();
         m.track = track;
 
+         this.loadableData ++;
+
         return m;
      }
 
