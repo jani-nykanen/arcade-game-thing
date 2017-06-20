@@ -15,8 +15,6 @@ class Game extends Scene
         GameObjects.Init(Super.graphics.gl);
         HUD.Init(Super.graphics.gl);
         Status.Init();
-
-        Assets.music.theme.Play(0.75,true);
     }
 
     /*! Draw, see scene.js*/
@@ -73,5 +71,11 @@ class Game extends Scene
         HUD.Update(timeMod);
 
         Status.Update(timeMod);
+    }
+
+    /*! On loaded */
+    OnLoaded()
+    {
+        Assets.music.theme.Play(0.75,true);
     }
 }

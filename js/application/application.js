@@ -69,6 +69,7 @@ class Application extends ApplicationCore
     OnLoaded()
     {
         this.loaded = true;
+        this.scenes.game.OnLoaded();
     }
 
     /*! OnResize, see core.js */
