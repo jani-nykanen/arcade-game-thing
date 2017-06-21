@@ -21,6 +21,12 @@ class GameObjects
         {
             this.messages[i] = new Message(gl);
         }
+
+        this.asteroids = new Array(32);
+        for(var i = 0; i < this.asteroids.length; i++)
+        {
+            this.asteroids[i] = new Asteroid();
+        }
     }
 
     /*! Update
@@ -40,6 +46,20 @@ class GameObjects
                 this.boss.OnBulletCollision(this.bullets[i]);
                 this.player.OnBulletCollision(this.bullets[i]);
             }
+
+            for(var i2 = 0; i2 < this.asteroids.length; i2++)
+            {
+                if(this.asteroids[i2].exist && this.bullets[i].exist)
+                {
+                    this.asteroids[i2].OnBulletCollision(this.bullets[i]);
+                }
+            }
+        }
+
+        for(var i = 0; i < this.asteroids.length; i++)
+        {
+            this.asteroids[i].Update(timeMod);
+            this.asteroids[i].OnPlayerCollision(this.player);
         }
 
         for(var i = 0; i < this.messages.length; i++)
@@ -79,6 +99,13 @@ class GameObjects
             this.SetGObjectViewport(g);
         }
 
+        g.eff.Reset();
+        g.eff.Use();
+        for(var i = 0; i < this.asteroids.length; i++)
+        {
+            this.asteroids[i].Draw(g);
+        }
+
         this.player.Draw(g);
 
         for(var i = 0; i < this.bullets.length; i++)
@@ -114,6 +141,25 @@ class GameObjects
             if(this.bullets[i].exist == false && this.bullets[i].deathTimer <= 0.0)
             {
                 this.bullets[i].Create(x,y,sx,sy,power,type,sizeMod);
+                break;
+            }
+        }
+    }
+
+    /*! A macro for creating a bullet
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param sx Speed x
+     * @param sy Speed y
+     * @param type Bullet type
+     */
+    static CreateAsteroid(x,y,sx,sy,sizeMod)
+    {
+        for(var i = 0; i < this.asteroids.length; i++)
+        {
+            if(this.asteroids[i].exist == false)
+            {
+                this.asteroids[i].Create(x,y,sx,sy,sizeMod);
                 break;
             }
         }

@@ -54,9 +54,16 @@ class Bullet {
         {
             if(this.deathTimer > 0)
             {
-                if(this.deathTimer == 30 && this.type == BulletType.Special)
+                if(this.deathTimer == 30)
                 {
-                    Camera.Shake(30,4 * this.sizeMod);
+                    if(this.type == BulletType.Special)
+                    {
+                        Camera.Shake(30,4 * this.sizeMod);
+                        Assets.sounds.explosion.Play(1.0);
+                    }
+
+                    else if(this.type == BulletType.Friendly)
+                        Assets.sounds.hit.Play(0.6);
                 }
                 this.deathTimer -= 1.0 * timeMod;
                 

@@ -43,7 +43,7 @@
 
         if(points < 1000)
         {
-            this.exp += points/ (150 * this.level);
+            this.exp += points/ (75 * this.level);
         }
 
         if(this.chainExp >= 1.0)
@@ -70,7 +70,7 @@
 
         if(this.health < 5)
         {
-            this.healthRestore += 0.0025 * timeMod;
+            this.healthRestore += 0.002 * timeMod;
             if(this.healthRestore >= 1.0)
             {
                 this.health ++;
@@ -138,6 +138,8 @@
 
             this.exp -= 1.0;
             this.level ++;
+
+            Assets.sounds.levelUp.Play(0.7);
         }
     }
  }

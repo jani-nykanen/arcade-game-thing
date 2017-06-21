@@ -37,11 +37,27 @@ class Assets
             circle : Loader.LoadBitmap("assets/bitmaps/circle.png"),
             spiral : Loader.LoadBitmap("assets/bitmaps/spiral.png"),
             heart: Loader.LoadBitmap("assets/bitmaps/heart.png"),  
+            asteroid: Loader.LoadBitmap("assets/bitmaps/asteroid.png"),  
         };
 
         this.music = 
         {
             theme : Loader.LoadMusic("assets/audio/theme.ogg"),
+        }
+
+        this.sounds = 
+        {
+            shoot : Loader.LoadSound("assets/audio/shoot.wav"),
+            hit : Loader.LoadSound("assets/audio/hit.wav"),
+            hurt : Loader.LoadSound("assets/audio/hurt.wav"),
+            explosion : Loader.LoadSound("assets/audio/explosion.wav"),
+            warp : Loader.LoadSound("assets/audio/warp.wav"),
+            enemyShoot : Loader.LoadSound("assets/audio/enemy_shoot.wav"),
+            getBack : Loader.LoadSound("assets/audio/get_back.wav"),
+            specialShoot : Loader.LoadSound("assets/audio/special_shoot.wav"),
+            levelUp : Loader.LoadSound("assets/audio/level_up.wav"),
+            destroy : Loader.LoadSound("assets/audio/destroy.wav"),
+            destroy2 : Loader.LoadSound("assets/audio/destroy2.wav"),
         }
     }
 

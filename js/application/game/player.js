@@ -50,6 +50,8 @@ class Player
 
             if(this.spcShootTimer > 60 && Controls.mousestate[2] == State.Up)
             {
+                Assets.sounds.shoot.Play(0.8);
+
                 var sizeMod = this.spcShootTimer / 120.0;
 
                 this.isSpcShooting = false;
@@ -77,11 +79,15 @@ class Player
                 this.speed.y *= 2;
                 this.target.x *= 2;
                 this.target.y *= 2;
+
+                Assets.sounds.warp.Play(0.75);
             }
             else if(this.isShooting == false)
             {
                 if(Controls.mousestate[0] == State.Down)
                 {
+                    Assets.sounds.shoot.Play(0.5);
+
                     this.isShooting = true;
                     this.shootSpr.currentFrame = 0;
                     this.shootSpr.currentRow = 1;
@@ -130,6 +136,7 @@ class Player
                 }
                 else if(Status.bombs > 0 && Controls.mousestate[2] == State.Pressed)
                 {
+                    Assets.sounds.specialShoot.Play(0.8);
                     Status.bombs --;
                     this.isSpcShooting = true;
                     this.spcShootTimer = 0;
@@ -287,6 +294,8 @@ class Player
                 GameObjects.CreateMessage("Level Down!",160 - 11*8,96,-3);
             }
 
+            Assets.sounds.hurt.Play(1.0);
+
             Camera.Shake(60,1);
         }
     }
@@ -318,6 +327,8 @@ class Player
             this.spcShootTimer += 1.0 * timeMod;
             if(this.spcShootTimer > 120)
             {
+                Assets.sounds.shoot.Play(0.8);
+
                 GameObjects.CreateBullet(
                         this.x + 0.175 * Math.cos(this.angle - Math.PI/2),
                         this.y + 0.175 * Math.sin(this.angle - Math.PI/2),

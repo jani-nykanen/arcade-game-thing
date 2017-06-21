@@ -56,15 +56,17 @@ class Boss
      */
     OnPlayerCollision(p)
     {
-        for(var i = 0; i < this.hands.length; i++)
-        {
-            this.hands[i].OnPlayerCollision(p);
-        }
-        this.base.OnPlayerCollision(p);
-
         if(Stage.phase == 2)
         {
             this.heart.OnPlayerCollision(p);
+        }
+        else
+        {
+            for(var i = 0; i < this.hands.length; i++)
+            {
+                this.hands[i].OnPlayerCollision(p);
+            }
+            this.base.OnPlayerCollision(p);
         }
     }
 

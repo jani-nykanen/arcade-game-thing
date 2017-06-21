@@ -74,6 +74,30 @@
         return m;
      }
 
+     /*! Load a sound effect
+      * @param src Source path
+      */
+     static LoadSound(src)
+     {
+        var sound = new Howl(
+            {
+                src: [src]
+            }
+        );
+
+        sound.on("load",function()
+        {
+            Loader.currentlyLoaded ++;
+        });
+
+        this.loadableData ++;
+
+        var s = new Sound();
+        s.sound = sound;
+
+        return s;
+     }
+
      /*! Is every file loaded
       * @return Boolean, has loaded
       */

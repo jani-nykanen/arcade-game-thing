@@ -105,7 +105,7 @@ class BossHand
         else
         {
             var pldist = Math.hypot(GameObjects.player.x,GameObjects.player.y);
-            this.radiusTargetSpeed = pldist < this.radius ? -0.02 : 0.02;
+            this.radiusTargetSpeed = pldist < this.radius ? -0.01 : 0.01;
 
             if(this.radiusSpeed < this.radiusTargetSpeed)
             {
@@ -131,6 +131,8 @@ class BossHand
     /*! Shoot some bullets */
     Shoot()
     {
+        Assets.sounds.enemyShoot.Play(0.8);
+
         var sx,sy;
 
         var speedMod = 1.0;
@@ -219,6 +221,8 @@ class BossHand
 
             if(Status.bossHealth < 10000 - 400 * (Status.handsDefeated+1) - 200 * Math.pow(Status.handsDefeated,2))
             {
+                Assets.sounds.destroy.Play(0.8);
+
                 this.dead = true;
                 Status.handsDefeated ++;
                 this.deathTimer = 60;

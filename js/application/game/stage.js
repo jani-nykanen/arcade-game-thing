@@ -177,6 +177,7 @@ class Stage
         {
             this.phaseChangeTimer = 120;
             Camera.Shake(120,8);
+            Assets.sounds.destroy2.Play(0.8);
         }
 
         if(this.phaseChangeTimer > 0)

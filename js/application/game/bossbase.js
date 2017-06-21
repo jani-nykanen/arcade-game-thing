@@ -30,7 +30,7 @@ class BossBase
         this.dead = false;
         this.deathTimer = 0;
 
-        this.shootTimer = 120 + Math.random() * 60;
+        this.shootTimer = 0;
         this.colorModTimer = 0;
         this.shootPhase = 0;
     }
@@ -100,6 +100,8 @@ class BossBase
     /*! Shoot bullets */
     Shoot()
     {
+        Assets.sounds.enemyShoot.Play(0.8);
+
         var sx,sy;
 
         for(var angle = 0; angle < Math.PI*2; angle += Math.PI*2 / 24 )
@@ -115,6 +117,34 @@ class BossBase
         }
     }
 
+    /*! Shoot an asteroid (or two) */
+    ShootAsteroid()
+    {
+        var shootDir = Math.random() >= 0.5 ? -1 : 1;
+        if(Math.random() >= 0.5)
+        {
+            GameObjects.CreateAsteroid(
+                (-3.2)*shootDir,
+                -2.4 + Math.random()*4.8,
+                (0.01 + Math.random()*0.025)*shootDir /2,
+                Math.random()*0.02 - 0.01,
+                0.5 + Math.random()*0.75
+            );
+
+        }
+        else
+        {
+            GameObjects.CreateAsteroid(
+                (-2.4 + Math.random()*4.8)*(4/3),
+                (-4.0 * 3/4)*shootDir,
+                Math.random()*0.02 - 0.01,
+                (0.01 + Math.random()*0.025)*shootDir /2,
+                0.5 + Math.random()*0.75
+            );
+        }
+    
+    }
+
     /*! Shooting routines 
      * @param timeMod Time modifier 
      */
@@ -123,25 +153,47 @@ class BossBase
         this.shootTimer -= 1.0 * timeMod;
         if(this.shootTimer <= 0.0)
         {
-            this.shootTimer += 120 + Math.random()*30 + this.shootPhase *60;
-
-            if(this.shootPhase == 0)
-                this.Shoot();
-            else
+            if(this.faceDead && this.faceDeathTimer <= 0.0)
             {
-                for(var i = 0; i < GameObjects.bullets.length; i++)
+                this.shootTimer += 120 + Math.random()*30 + this.shootPhase *60;
+
+                if(this.shootPhase == 0)
+                    this.Shoot();
+                else
                 {
-                    if(GameObjects.bullets[i].exist && GameObjects.bullets[i].type == BulletType.Enemy)
+                    Assets.sounds.getBack.Play(0.8);
+
+                    for(var i = 0; i < GameObjects.bullets.length; i++)
                     {
-                        GameObjects.bullets[i].speed.x  *= -1.25;
-                        GameObjects.bullets[i].speed.y  *= -1.25;
+                        if(GameObjects.bullets[i].exist && GameObjects.bullets[i].type == BulletType.Enemy)
+                        {
+                            GameObjects.bullets[i].speed.x  *= -1.25;
+                            GameObjects.bullets[i].speed.y  *= -1.25;
+                        }
+                    }
+
+                    if(this.shootPhase == 2)
+                    {
+                        for(var i = 0; i < 3 + Math.random()*6; i++)
+                        {
+                            this.ShootAsteroid();
+                        }
                     }
                 }
+                    
+                this.shootPhase ++;
+                if(this.shootPhase == 3)
+                    this.shootPhase = 0;
+
             }
-                
-            this.shootPhase ++;
-            if(this.shootPhase == 3)
-                this.shootPhase = 0;
+            else
+            {
+                for(var i = 0; i < Math.floor(Math.random()*12) +6; i++)
+                {
+                    this.ShootAsteroid();
+                }
+                this.shootTimer += 60 + Math.random()*60
+            }
 
             this.colorModTimer = 20;
         }
@@ -170,6 +222,8 @@ class BossBase
 
         if(Status.bossHealth <= 0)
         {
+            Assets.sounds.destroy.Play(0.8);
+
             this.dead = true;
             this.deathTimer = 60;
             Camera.Shake(120,8.0);
@@ -211,9 +265,15 @@ class BossBase
 
             if(this.faceDeathTimer > 0)
                 this.faceDeathTimer -= 0.5 * timeMod;
+            else
+            {
+                this.ShootingRoutines(timeMod);
+            }
 
             if(!this.faceDead && Status.bossHealth <= 4000)
             {
+                Assets.sounds.destroy.Play(0.8);
+
                 this.faceDeathTimer = 60;
                 this.faceDead = true;
                 Camera.Shake(60,6);
@@ -230,7 +290,6 @@ class BossBase
             if(this.faceDead && this.faceDeathTimer <= 0.0)
             {
                 this.SpecialMovement(timeMod);
-                this.ShootingRoutines(timeMod);
                 this.plantScaleMod += 0.05 * timeMod;
                 this.plantSize = 0.5 + 0.025 * Math.sin(this.plantScaleMod);
             }
