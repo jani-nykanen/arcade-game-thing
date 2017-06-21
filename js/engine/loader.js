@@ -21,6 +21,13 @@
         this.currentlyLoaded = 0;
     }
 
+    /*! Get percentage, how much is loaded
+     * @param return Percentage
+     */
+    static GetPercentage()
+    {
+        return String(Math.floor(this.currentlyLoaded/this.loadableData * 100)) + "%";
+    }
     
     /*! Load a bitmap
      *@param src Image source

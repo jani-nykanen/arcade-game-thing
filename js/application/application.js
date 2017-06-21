@@ -148,7 +148,7 @@ class Application extends ApplicationCore
 
         if(Loader.currentlyLoaded > 0)
         {
-            g.DrawText(HUD.font,Assets.textures.font16,"Loading...",32,32,0,-1);
+            g.DrawText(HUD.font,Assets.textures.font16,"Loading... " + Loader.GetPercentage(),32,32,0,-1);
         }
     }
 
