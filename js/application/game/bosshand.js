@@ -131,7 +131,7 @@ class BossHand
     /*! Shoot some bullets */
     Shoot()
     {
-        Assets.sounds.enemyShoot.Play(0.8);
+        MasterAudio.PlaySound(Assets.sounds.enemyShoot,0.7);
 
         var sx,sy;
 
@@ -221,7 +221,7 @@ class BossHand
 
             if(Status.bossHealth < 10000 - 400 * (Status.handsDefeated+1) - 200 * Math.pow(Status.handsDefeated,2))
             {
-                Assets.sounds.destroy.Play(0.8);
+                MasterAudio.PlaySound( Assets.sounds.destroy, 0.6);
 
                 this.dead = true;
                 Status.handsDefeated ++;

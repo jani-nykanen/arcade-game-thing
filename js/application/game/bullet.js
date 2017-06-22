@@ -59,11 +59,11 @@ class Bullet {
                     if(this.type == BulletType.Special)
                     {
                         Camera.Shake(30,4 * this.sizeMod);
-                        Assets.sounds.explosion.Play(1.0);
+                         MasterAudio.PlaySound(Assets.sounds.explosion,0.6);
                     }
 
                     else if(this.type == BulletType.Friendly)
-                        Assets.sounds.hit.Play(0.6);
+                       MasterAudio.PlaySound(Assets.sounds.hit,0.6);
                 }
                 this.deathTimer -= 1.0 * timeMod;
                 

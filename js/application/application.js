@@ -63,6 +63,8 @@ class Application extends ApplicationCore
         VPad.Init();
         VPad.PushButton("warp",32);
 
+        MasterAudio.SetSoundVolume(0.5);
+
     }
 
     /*! Triggers when assets are loaded */

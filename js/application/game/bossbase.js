@@ -100,7 +100,7 @@ class BossBase
     /*! Shoot bullets */
     Shoot()
     {
-        Assets.sounds.enemyShoot.Play(0.8);
+        MasterAudio.PlaySound(Assets.sounds.enemyShoot,0.7);
 
         var sx,sy;
 
@@ -161,7 +161,7 @@ class BossBase
                     this.Shoot();
                 else
                 {
-                    Assets.sounds.getBack.Play(0.8);
+                    MasterAudio.PlaySound(Assets.sounds.getBack,0.7);
 
                     for(var i = 0; i < GameObjects.bullets.length; i++)
                     {
@@ -222,7 +222,7 @@ class BossBase
 
         if(Status.bossHealth <= 0)
         {
-            Assets.sounds.destroy.Play(0.8);
+            MasterAudio.PlaySound(Assets.sounds.destroy,0.6);
 
             this.dead = true;
             this.deathTimer = 60;

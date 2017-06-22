@@ -159,6 +159,8 @@ class ApplicationCore
 				return false;
 			}
 		}, false);
+
+		MasterAudio.Init
 		
 	}
 

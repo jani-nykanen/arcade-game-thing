@@ -139,7 +139,7 @@
             this.exp -= 1.0;
             this.level ++;
 
-            Assets.sounds.levelUp.Play(0.7);
+            MasterAudio.PlaySound(Assets.sounds.levelUp,0.6);
         }
     }
  }
