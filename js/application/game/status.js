@@ -130,6 +130,18 @@
                 Status.bossHealth = 4001;
                 Status.handsDefeated = 4;
             }
+
+            if(Controls.keystate[76] == State.Pressed)
+            {
+                for(var i = 0; i < GameObjects.boss.hands.length; i++)
+                {
+                    GameObjects.boss.hands[i].dead = true;
+                    GameObjects.boss.hands[i].deathTimer = 60;
+                }
+                Status.bossHealth = 1;
+                Status.handsDefeated = 4;
+                GameObjects.boss.base.faceDead = true;
+            }
         }
 
         if(this.exp >= 1.0 && this.level < 9)

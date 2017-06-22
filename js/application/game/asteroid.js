@@ -96,6 +96,8 @@ class Asteroid {
             return;
 
         var scale = 0.5 * this.sizeMod;
-        g.DrawCenteredBitmap(Assets.textures.asteroid,this.x,this.y,this.angle,scale,scale);
+        g.DrawRegularBitmapPortion(Assets.textures.asteroid,this.x,this.y,2,
+        Stage.phase == 2 ? 1 : 0,0,
+        this.angle,scale,scale);
     }
 }
