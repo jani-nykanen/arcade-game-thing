@@ -61,9 +61,13 @@ class RegularSprite
             return;
 
 		var gl = g.gl;
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D,tex);
+        
+        if(tex != g.lastTexture)
+        {
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D,tex);
+            g.lastTexture = tex;
+        }
 
         gl.bindBuffer(gl.ARRAY_BUFFER,this.vBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.iBuffer);

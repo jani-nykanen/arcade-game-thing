@@ -108,7 +108,7 @@
         /* Debug codes
          * @todo Add own class for them
          */
-        if(Controls.keystate[225] == State.Down)
+        if(Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down)
         {
             if(Controls.keystate[80] == State.Pressed && this.level < 9)
             {

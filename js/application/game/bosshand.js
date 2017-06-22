@@ -298,7 +298,7 @@ class BossHand
         }
         g.eff.Use();
 
-        g.DrawCenteredBitmap(Assets.textures.palm,this.x,this.y,this.angle - Math.PI,scale,scale);
+        g.DrawRegularBitmapPortion(Assets.textures.palm,this.x,this.y,2,0,0,this.angle - Math.PI,scale,scale);
 
         g.eff.Reset();
         g.eff.Use();

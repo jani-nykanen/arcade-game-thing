@@ -18,8 +18,24 @@ class Heart
 
         this.asteroidTimer = 120 + Math.random()*120;
         this.asteroidPhase = 0;
-
         this.colorModTimer = 0;
+
+        this.shurikens = new Array(4);
+        for(var i = 0; i < this.shurikens.length; i++)
+        {
+            this.shurikens[i] = 
+            {
+                x: 0,
+                y: 0,
+                radius: 0,
+                angle : Math.PI/2 * i,
+                centerAngle : Math.random()*Math.PI*2,
+                sinMod : i * (Math.PI / 3),
+                active: false,
+            }
+        }
+
+        this.phase = 0;
     }
 
     /*! Shoot an asteroid (or two) */
@@ -31,7 +47,7 @@ class Heart
             GameObjects.CreateAsteroid(
                 (-3.2)*shootDir,
                 -2.4 + Math.random()*4.8,
-                (0.01 + Math.random()*0.025)*shootDir/1.25,
+                (0.01 + Math.random()*0.025)*shootDir/2,
                 Math.random()*0.03 - 0.015,
                 0.5 + Math.random()*0.9
             );
@@ -43,11 +59,73 @@ class Heart
                 (-2.4 + Math.random()*4.8)*(4/3),
                 (-4.0 * 3/4)*shootDir,
                 Math.random()*0.03 - 0.015,
-                (0.01 + Math.random()*0.025)*shootDir/1.25,
+                (0.01 + Math.random()*0.025)*shootDir/2,
                 0.5 + Math.random()*0.9
             );
         }
     
+    }
+
+    /*! Shoot an asteroid (or two) */
+    ShootBullet()
+    {
+        var shootDir = Math.random() >= 0.5 ? -1 : 1;
+        if(Math.random() >= 0.5)
+        {
+            GameObjects.CreateBullet(
+                Camera.x-(1.8)*shootDir,
+                Camera.y-1.5 + Math.random()*3.0,
+                (0.01 + Math.random()*0.025)*shootDir * 0.5,
+                Math.random()*0.02 - 0.01,
+                1,BulletType.Enemy);
+
+        }
+        else
+        {
+            GameObjects.CreateBullet(
+                Camera.x-1.8 + Math.random()*3.6,
+                Camera.y-(1.5)*shootDir,
+                Math.random()*0.02 - 0.01,
+                (0.01 + Math.random()*0.025)*shootDir * 0.5,
+                1,BulletType.Enemy);
+        }
+    
+    }
+
+    /*! Update shurikens
+     * @param timeMod Time modifier
+     */
+    UpdateShurikens(timeMod)
+    {
+        for(var i = 0; i < this.shurikens.length; i++)
+        {
+            var o = this.shurikens[i];
+
+            if(o.active)
+            {
+                if(o.radius < 1.0 + this.phase * 0.1)
+                {
+                    o.radius += 0.01 * timeMod;
+                    if(o.radius > 1.0+ this.phase * 0.1)
+                        o.radius = 1.0+ this.phase * 0.1;
+                }
+                o.sinMod += 0.035 * timeMod;
+
+                var rad = o.radius + (Math.sin(o.sinMod))* (0.25+0.025*this.phase ) ;
+
+                o.x = this.x-Math.cos(o.angle) * rad;
+                o.y = this.y-Math.sin(o.angle) * rad;
+
+                o.centerAngle += 0.1 * timeMod;
+            }
+            else if(Status.bossHealth < 10000 - (i+1)*2000)
+            {
+                o.active = true;
+                this.phase++;
+            }
+
+            o.angle += (0.025-0.0025*this.phase) * timeMod;
+        }
     }
 
     /*! Update 
@@ -55,16 +133,17 @@ class Heart
      */
     Update(timeMod)
     {
-        this.bumpWaitTimer += 1.0 * timeMod;
+        this.bumpWaitTimer += (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * timeMod;
         if(this.bumpWaitTimer >= 45)
         {
+            MasterAudio.PlaySound(Assets.sounds.heart,1.0);
             this.bumpWaitTimer -= 45;
             this.bumpTimer = 15;
         }
 
         if(this.bumpTimer > 0)
         {
-            this.bumpTimer -= 1.0 * timeMod;
+            this.bumpTimer -= (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * timeMod;
             if(this.bumpTimer < 0)
                 this.bumpTimer = 0.0;
         }
@@ -79,7 +158,7 @@ class Heart
 
             if(this.asteroidPhase == 0)
             {
-                for(var i = 0; i < 16 + Math.random()*12; i++)
+                for(var i = 0; i < 9 + this.phase + Math.random()*(6+this.phase*2); i++)
                 {
                     this.ShootAsteroid();
                 }
@@ -94,6 +173,14 @@ class Heart
                     o.speed.x = 0;
                     o.speed.y = 0;
                 }
+
+                if(this.phase >= 2)
+                {
+                    for(var i = 0; i < 6 + this.phase*3 + Math.random()*(6+this.phase*2); i++)
+                    {
+                        this.ShootBullet();
+                    }
+                }
             }
             else if(this.asteroidPhase == 2)
             {
@@ -103,13 +190,20 @@ class Heart
 
                     var o = GameObjects.asteroids[i];
                     var angle = Math.random() * Math.PI * 2;
-                    o.speed.x = Math.cos(angle)* (Math.random()*0.025 + 0.01);
-                    o.speed.y = Math.sin(angle)* (Math.random()*0.025 + 0.01);
+                    o.speed.x = Math.cos(angle)* (Math.random()*0.015 + 0.01);
+                    o.speed.y = Math.sin(angle)* (Math.random()*0.015 + 0.01);
                 }
             }
 
             if(this.asteroidPhase != 0)
+            {
                 this.colorModTimer  = 20;
+
+                if(this.asteroidPhase == 1 && this.phase >= 2)
+                    MasterAudio.PlaySound(Assets.sounds.enemyShoot,0.7);
+                else
+                    MasterAudio.PlaySound(Assets.sounds.getBack,0.7);
+            }
 
             this.asteroidPhase++;
             if(this.asteroidPhase == 3)
@@ -118,6 +212,8 @@ class Heart
 
         if(this.colorModTimer  > 0)
             this.colorModTimer  -= 1.0 * timeMod;
+
+        this.UpdateShurikens(timeMod);
     }
 
     /*! Check bullet collision
@@ -139,6 +235,21 @@ class Heart
             b.exist = false;
             b.deathTimer = 30;
         }
+
+        for(var i = 0; i < this.shurikens.length; i++)
+        {
+            var o = this.shurikens[i];
+
+            if(o.active)
+            {
+                dist = Math.hypot(o.x-b.x,o.y-b.y);
+                if(dist < 0.375)
+                {
+                    b.exist = false;
+                    b.deathTimer = 30;
+                }
+            }
+        }
     }
 
     /*! On player collision
@@ -154,6 +265,36 @@ class Heart
         {
             p.Hurt();
         }
+
+        for(var i = 0; i < this.shurikens.length; i++)
+        {
+            var o = this.shurikens[i];
+
+            if(o.active)
+            {
+                dist = Math.hypot(o.x-p.x,o.y-p.y);
+                if(dist < 0.425)
+                {
+                    p.Hurt();
+                }
+            }
+        }
+    }
+
+    /*! Draw shurikens
+     * @paramg g Graphics object
+     */
+    DrawShurikens(g)
+    {
+        for(var i = 0; i < this.shurikens.length; i++)
+        {
+            var o = this.shurikens[i];
+
+            if(o.active)
+            {
+                g.DrawRegularBitmapPortion(Assets.textures.palm,o.x,o.y,2,1,0,o.centerAngle,0.75,0.75);
+            }
+        }
     }
 
     /*! Draw
@@ -162,6 +303,9 @@ class Heart
     Draw(g)
     {   
         g.eff.SetColor(1,1,1,1);
+        g.eff.Use();
+
+        this.DrawShurikens(g);
 
         var scale = 1.25 + 0.25/15 * this.bumpTimer;
 
