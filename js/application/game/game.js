@@ -76,6 +76,7 @@ class Game extends Scene
     /*! On loaded */
     OnLoaded()
     {
-        Assets.music.theme.Play(0.75,true);
+        MasterAudio.PlayMusic(Assets.music.theme,0.0,true);
+        MasterAudio.Fade(1.0,0.017);
     }
 }

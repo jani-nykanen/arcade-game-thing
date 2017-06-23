@@ -21,6 +21,9 @@ class Stage
 
         this.phase = 1;
         this.phaseChangeTimer = 0;
+
+        this.platformTimer = 0;
+        this.platformDead = false;
     }
 
     /*! Draw space
@@ -189,6 +192,11 @@ class Stage
                 this.phase = Status.phase;
             }
         }
+        
+        if(this.platformDead && this.platformTimer > 0.0)
+        {
+            this.platformTimer -= 1.0 * timeMod;
+        }
     }
 
     /*! Draw
@@ -234,16 +242,30 @@ class Stage
      */
     static DrawFloor(g)
     {
+        if(this.platformDead && this.platformTimer <= 0)
+            return;
+
+        var scale = 2.5;
         var transparencyValue = 0.8 + (Math.sin(this.sunAngle*8)*0.1);
 
         g.eff.Reset();
         if(Status.phase == 1)
             g.eff.SetColor(1.0,1.0,1.0,transparencyValue);
         else
-            g.eff.SetColor(3.0,1.0,2.0,transparencyValue);
+        {
+            if(this.platformDead == false)
+                g.eff.SetColor(3.0,1.0,2.0,transparencyValue);
+            else
+            {
+                var mod = 1.0/180 * this.platformTimer;
+                g.eff.SetColor(3.0*mod,1.0*mod,2.0*mod,transparencyValue*mod);
+
+                scale += 2.5 * (1.0-mod);
+            }
+        }
         g.eff.Use();
 
-        g.DrawCenteredBitmap(Assets.textures.platform,0,0,0,2.5,2.5);
+        g.DrawCenteredBitmap(Assets.textures.platform,0,0,0,scale,scale);
 
         g.eff.Reset();
         g.eff.Use();

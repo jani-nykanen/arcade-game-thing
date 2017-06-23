@@ -64,6 +64,7 @@ class Application extends ApplicationCore
         VPad.PushButton("warp",32);
 
         MasterAudio.SetSoundVolume(0.5);
+        MasterAudio.SetMusicVolume(1.0);
 
     }
 
@@ -117,6 +118,8 @@ class Application extends ApplicationCore
         Controls.SetMouseVpos(this.graphics,this.canvas.width,this.canvas.height,this.canvasPos);
 
         this.scenes[this.currentScene].Update(this.timeMod);
+
+        MasterAudio.Update(this.timeMod);
     }
 
     /*! Draw to the framebuffer

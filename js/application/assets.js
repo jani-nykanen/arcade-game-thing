@@ -59,6 +59,8 @@ class Assets
             destroy : Loader.LoadSound("assets/audio/destroy.wav"),
             destroy2 : Loader.LoadSound("assets/audio/destroy2.wav"),
             heart : Loader.LoadSound("assets/audio/heart.wav"),
+            bump : Loader.LoadSound("assets/audio/bump.wav"),
+            weird : Loader.LoadSound("assets/audio/weird.wav"),
         }
     }
 

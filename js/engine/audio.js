@@ -10,6 +10,12 @@ class MasterAudio
     {
         this.soundVol = 1.0;
         this.musicVol = 1.0;
+
+        this.currentTrack = null;
+
+        this.doFade = 0;
+        this.fadeSpeed = 0;
+        this.doFade = false;
     }
 
     /*! Set global sound volume
@@ -37,6 +43,7 @@ class MasterAudio
     static PlayMusic(m,vol,loop)
     {
         m.Play(this.musicVol*vol,loop);
+        this.currentTrack = m.track;
     }
 
     /*! Play sound
@@ -46,5 +53,36 @@ class MasterAudio
     static PlaySound(s,vol)
     {
         s.Play(vol);
+    }
+
+    /*! Fade in music
+     * @param target Target volume
+     * @param speed Speed
+     */
+    static Fade(target, speed)
+    {
+        this.doFade = true;
+        this.fadeSpeed = speed;
+        this.target = target;
+    }
+
+    /*! Update
+     * @param timeMod Time modifier
+     */
+    static Update(timeMod)
+    {
+        if(this.doFade)
+        {
+            var vol = this.currentTrack.volume;
+            vol += this.fadeSpeed;
+            if( (this.fadeSpeed > 0 && vol > this.target) 
+                || (this.fadeSpeed < 0 && vol < this.target ) )
+            {
+                vol = this.target;
+                this.doFade = false;
+            }
+
+            this.currentTrack.volume = vol;
+        }
     }
 }

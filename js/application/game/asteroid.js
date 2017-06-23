@@ -18,6 +18,7 @@ class Asteroid {
         this.exist = false;   
         this.sizeMod = 1;
         this.angle = 0.0;
+        this.deathTimer = 0;
     }
 
     /*! Create asteroid
@@ -36,11 +37,12 @@ class Asteroid {
         this.exist = true;
         this.sizeMod = sizeMod === null ? 1 : sizeMod;
         this.angle = Math.random() * Math.PI * 2;
+        this.deathTimer = 0;
     }
 
     OnBulletCollision(b)
     {
-        if(this.dead || b.exist == false) return;
+        if(this.exist == false || b.exist == false) return;
 
         var dist = Math.hypot(this.x-b.x,this.y-b.y);
 
@@ -71,7 +73,13 @@ class Asteroid {
      */
     Update(timeMod)
     {
-        if(this.exist == false) return;
+        if(this.exist == false)
+        {
+            if(this.deathTimer > 0)
+                this.deathTimer -= 1.0 * timeMod;
+
+            return;
+        }
 
         this.x += this.speed.x * timeMod;
         this.y += this.speed.y * timeMod;
@@ -90,14 +98,30 @@ class Asteroid {
     Draw(g)
     {
 
-        if( this.exist == false || 
+        if( (this.exist == false && this.deathTimer <= 0) || 
             (this.x < (Camera.x-1.25)* (4/3) || this.x > (Camera.x+1.25)* (4/3) || this.y < Camera.y-1.25 || this.y > Camera.y+1.25)
         ) 
             return;
 
         var scale = 0.5 * this.sizeMod;
+
+        if(this.deathTimer > 0)
+        {
+            var mod = 1.0/30.0 * this.deathTimer;
+            scale *= 1.0 + (1.0-mod)*2;
+
+            g.eff.SetColor(mod,mod,mod,mod);
+            g.eff.Use();
+        }
+
         g.DrawRegularBitmapPortion(Assets.textures.asteroid,this.x,this.y,2,
             Stage.phase == 2 ? 1 : 0,0,
             this.angle,scale,scale);
+
+        if(this.deathTimer > 0)
+        {
+            g.eff.Reset();
+            g.eff.Use();
+        }
     }
 }

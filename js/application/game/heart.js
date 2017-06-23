@@ -11,6 +11,7 @@ class Heart
         this.x = 0;
         this.y = 0;
         this.dead = false;
+        this.deathTimer = 0;
         this.bumpTimer = 0;
         this.bumpWaitTimer = 0;
 
@@ -34,6 +35,7 @@ class Heart
                 active: false,
             }
         }
+        this.shurikenDeathTimer = 0;
 
         this.phase = 0;
     }
@@ -128,15 +130,36 @@ class Heart
         }
     }
 
+    /*! Death comes
+     * @param timeMod The amount of kittens in your... mouth!
+     */
+    Die(timeMod)
+    {
+        if(this.shurikenDeathTimer > 0)
+            this.shurikenDeathTimer -= 1.0 * timeMod;
+
+        this.deathTimer += 1.0 * timeMod;
+        if(this.deathTimer >= 120)
+        {
+            if(Stage.platformDead == false)
+            {
+                Stage.platformDead = true;
+                Stage.platformTimer = 180;
+                MasterAudio.PlaySound(Assets.sounds.weird,1.0);
+            }
+        }
+    }
+
     /*! Update 
      * @param timeMod Time modifier 
      */
     Update(timeMod)
     {
-        this.bumpWaitTimer += (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * timeMod;
+
+        this.bumpWaitTimer += (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * (this.dead ? 2 : 1) * timeMod;
         if(this.bumpWaitTimer >= 45)
         {
-            // MasterAudio.PlaySound(Assets.sounds.heart,1.0);
+            MasterAudio.PlaySound(Assets.sounds.heart,1.0);
             this.bumpWaitTimer -= 45;
             this.bumpTimer = 15;
         }
@@ -146,6 +169,43 @@ class Heart
             this.bumpTimer -= (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * timeMod;
             if(this.bumpTimer < 0)
                 this.bumpTimer = 0.0;
+        }
+
+        if(this.dead)
+        {
+            this.Die(timeMod);
+            return;
+        }
+
+        // DEATH!
+        if(Status.bossHealth <= 0)
+        {
+            for(var i = 0; i < GameObjects.bullets.length; i++)
+            {
+                if(GameObjects.bullets[i].type == BulletType.Enemy && GameObjects.bullets[i].exist)
+                {
+                    GameObjects.bullets[i].exist = false;
+                    GameObjects.bullets[i].deathTimer = 30;
+                }
+            }
+
+            for(var i = 0; i < GameObjects.asteroids.length; i++)
+            {
+                if(GameObjects.asteroids[i].exist)
+                {
+                    GameObjects.asteroids[i].exist = false;
+                    GameObjects.asteroids[i].deathTimer = 30;
+                }
+            }
+
+            this.hurtTimer = 0;
+            this.shurikenDeathTimer = 30;
+            this.dead = true;
+            
+            MasterAudio.Fade(0.0,0.-0.005);
+            MasterAudio.PlaySound(Assets.sounds.bump,1.0);
+
+            return;
         }
 
         if(this.hurtTimer > 0)
@@ -286,13 +346,29 @@ class Heart
      */
     DrawShurikens(g)
     {
+        var scale = 0.75;
+
+        if(this.dead)
+        {
+            if(this.shurikenDeathTimer > 0)
+            {
+                var mod = 1.0/30.0 *  this.shurikenDeathTimer;
+                g.eff.SetColor(mod,mod,mod,mod);
+                g.eff.Use();
+
+                scale += 1.0- mod;
+            }
+            else
+                return;
+        }
+
         for(var i = 0; i < this.shurikens.length; i++)
         {
             var o = this.shurikens[i];
 
             if(o.active)
             {
-                g.DrawRegularBitmapPortion(Assets.textures.palm,o.x,o.y,2,1,0,o.centerAngle,0.75,0.75);
+                g.DrawRegularBitmapPortion(Assets.textures.palm,o.x,o.y,2,1,0,o.centerAngle,scale,scale);
             }
         }
     }
@@ -306,6 +382,9 @@ class Heart
         g.eff.Use();
 
         this.DrawShurikens(g);
+
+        g.eff.SetColor(1,1,1,1);
+        g.eff.Use();
 
         var scale = 1.25 + 0.25/15 * this.bumpTimer;
 
