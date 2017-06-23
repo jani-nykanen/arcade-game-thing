@@ -136,7 +136,7 @@ class Heart
         this.bumpWaitTimer += (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * timeMod;
         if(this.bumpWaitTimer >= 45)
         {
-            MasterAudio.PlaySound(Assets.sounds.heart,1.0);
+            // MasterAudio.PlaySound(Assets.sounds.heart,1.0);
             this.bumpWaitTimer -= 45;
             this.bumpTimer = 15;
         }
