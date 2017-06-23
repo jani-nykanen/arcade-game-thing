@@ -27,6 +27,12 @@ class GameObjects
         {
             this.asteroids[i] = new Asteroid();
         }
+
+        this.particles = new Array(32);
+        for(var i = 0; i < this.particles.length; i++)
+        {
+            this.particles[i] = new Particle();
+        }
     }
 
     /*! Update
@@ -65,6 +71,14 @@ class GameObjects
         for(var i = 0; i < this.messages.length; i++)
         {
             this.messages[i].Update(timeMod);
+        }
+
+        if(this.player.spcDeathTimer <= 120)
+        {
+            for(var i = 0; i < this.particles.length; i++)
+            {
+                this.particles[i].Update(timeMod);
+            }
         }
     }
 
@@ -111,6 +125,18 @@ class GameObjects
         for(var i = 0; i < this.bullets.length; i++)
         {
             this.bullets[i].Draw(g);
+        }
+
+        if(this.player.spcDeathTimer <= 120)
+        {
+            g.ChangeShader(ShaderType.NoTexture);
+
+            for(var i = 0; i < this.particles.length; i++)
+            {
+                this.particles[i].Draw(g);
+            }
+
+            g.ChangeShader(ShaderType.Default);
         }
 
         g.SetDepthTesting(true);

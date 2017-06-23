@@ -24,6 +24,8 @@ class Stage
 
         this.platformTimer = 0;
         this.platformDead = false;
+
+        this.whiteningTimer = 0;
     }
 
     /*! Draw space
@@ -46,15 +48,15 @@ class Stage
         g.eff.SetFog(0,0,0,3.5,8);
         g.eff.Use();
         
-        g.DrawMesh(Shapes.cylinder,Stage.phase == 1 ? Assets.textures.space.tex : Assets.textures.space2.tex);
+        g.DrawMesh(Shapes.cylinder,(Stage.phase == 1 || GameObjects.boss.heart.exploded) ? Assets.textures.space.tex : Assets.textures.space2.tex);
 
-        if(Stage.phase == 2)
+        if(Stage.phase == 2 && GameObjects.boss.heart.exploded == false)
         {
             g.ChangeShader(ShaderType.Default);
             g.eff.Use();
 
             g.transf.Perspective(75.0,320.0/240.0,0.1,100.0);
-             g.transf.View(vec3.fromValues(0,0,-1),vec3.fromValues(0,0,1),vec3.fromValues(0,1,0));
+            g.transf.View(vec3.fromValues(0,0,-1),vec3.fromValues(0,0,1),vec3.fromValues(0,1,0));
             g.transf.Identity();
             g.transf.Translate(0,0,7);
             g.transf.RotateQuaternion(0,0,Stage.sunAngle * 8);
@@ -93,6 +95,7 @@ class Stage
 
         shineMod = 0.9 + 0.05 * (Math.sin(this.shineValue) +1);
         g.DrawScaledBitmap(Assets.textures.sunShine,160-160*shineMod,120-120*shineMod,320*shineMod,240*shineMod);
+
 
         g.ChangeShader(ShaderType.Fog);
         
@@ -152,6 +155,8 @@ class Stage
      */
     static DrawSmallPlanets(g)
     {
+        if(GameObjects.boss.heart.exploded) return;
+
         g.ChangeShader(ShaderType.Fog);
         g.SetFiltering(TextureFilter.Linear);
 
@@ -168,7 +173,9 @@ class Stage
      */
     static Update(timeMod)
     {
-        this.spacePos += (Status.phase == 1 ? 0.025 : 0.06) * timeMod;
+        this.spacePos += ( (Status.phase == 1 || GameObjects.boss.heart.exploded) ? 0.025
+         : 0.06 + 0.06 * (1.0 - 1.0/10000 * Status.bossHealth)
+         ) * timeMod;
         if(this.spacePos >= 1.0)
             this.spacePos -= 1.0;
 
@@ -197,6 +204,9 @@ class Stage
         {
             this.platformTimer -= 1.0 * timeMod;
         }
+
+        if(this.whiteningTimer > 0)
+            this.whiteningTimer -= 1.0 * timeMod;
     }
 
     /*! Draw
@@ -208,6 +218,9 @@ class Stage
 
         this.DrawSun(g);
         this.DrawSmallPlanets(g);
+
+        if(this.whiteningTimer > 0)
+            this.DrawWhiteness2(g);
         
         g.ChangeShader(ShaderType.Default);
         g.SetFiltering(TextureFilter.Linear);
@@ -224,6 +237,31 @@ class Stage
         g.transf.Identity();
 
         var alpha = 1.0 - 1.0/60 * (Math.abs(this.phaseChangeTimer - 60));
+
+        g.eff.SetColor(1.0,1.0,1.0,alpha);
+        g.eff.Use();
+
+        g.FillRect(0,0,320,240);
+
+        g.ChangeShader(ShaderType.Default);
+        g.eff.Reset();
+        g.eff.Use();
+    }
+
+    /*! Draw fade in whiteness
+     * Normally one could use Fade class (coming soon)
+     * but it's no good for drawing stuff below player
+     * and HUD layers
+     * @param g Graphics object
+     */
+    static DrawWhiteness2(g)
+    {
+        g.ChangeShader(ShaderType.NoTexture);
+
+        g.transf.Ortho2D(320,240);
+        g.transf.Identity();
+
+        var alpha = 1.0/120 * this.whiteningTimer;
 
         g.eff.SetColor(1.0,1.0,1.0,alpha);
         g.eff.Use();

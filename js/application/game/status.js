@@ -30,6 +30,7 @@
         this.phase = 1;
 
         this.time = 0;
+        this.victory = false;
 
     }
 
@@ -138,6 +139,21 @@
                     GameObjects.boss.hands[i].dead = true;
                     GameObjects.boss.hands[i].deathTimer = 60;
                 }
+                Status.bossHealth = 1;
+                Status.handsDefeated = 4;
+                GameObjects.boss.base.faceDead = true;
+            }
+
+            if(Controls.keystate[75] == State.Pressed)
+            {
+                for(var i = 0; i < GameObjects.boss.hands.length; i++)
+                {
+                    GameObjects.boss.hands[i].dead = true;
+                    GameObjects.boss.hands[i].deathTimer = 60;
+                }
+                GameObjects.boss.base.dead = true;
+                Status.phase = 2;
+                Stage.phase = 2;
                 Status.bossHealth = 1;
                 Status.handsDefeated = 4;
                 GameObjects.boss.base.faceDead = true;

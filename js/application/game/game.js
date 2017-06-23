@@ -26,7 +26,9 @@ class Game extends Scene
 
         Stage.Draw(g);
         g.SetDepthTesting(false);
-        GameObjects.Draw(g);
+
+        if(GameObjects.player.spcDeathTimer > 0)
+            GameObjects.Draw(g);
 
         g.transf.Ortho2D(this.Super.canvas.width,this.Super.canvas.height);
         g.transf.Identity();
@@ -50,8 +52,11 @@ class Game extends Scene
         }
 
         g.SetDepthTesting(false);
-        HUD.Draw(g);
-        GameObjects.DrawInCanvasSize(g);
+        if(GameObjects.boss.heart.exploded == false)
+            HUD.Draw(g);
+
+        if(GameObjects.player.spcDeathTimer > 0)
+            GameObjects.DrawInCanvasSize(g);
 
         g.eff.Reset();
         g.eff.Use();
@@ -62,7 +67,9 @@ class Game extends Scene
     /*! Update, see scene.js */
     Update(timeMod)
     {
-        GameObjects.Update(timeMod);
+        if(GameObjects.player.spcDeathTimer > 0)
+            GameObjects.Update(timeMod);
+            
         Stage.Update(timeMod);
 
         Camera.Limit();

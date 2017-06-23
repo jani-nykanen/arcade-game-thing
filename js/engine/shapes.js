@@ -138,6 +138,41 @@ class Shapes
         this.cylinder = new Mesh(vertices,indices,uvCoords);
     }
 
+    static _GenCircle()
+    {
+        var vertices = [];
+        var indices = [];
+        var uvCoords = [];
+
+        var step = Math.PI*2 / 24;
+
+        for(var angle = 0; angle < Math.PI * 2; angle += step)
+        {
+            vertices.push(Math.cos(angle));
+            vertices.push(Math.sin(angle));  
+            vertices.push(0);
+
+            vertices.push(Math.cos(angle+step));
+            vertices.push(Math.sin(angle+step));  
+            vertices.push(0);
+
+            vertices.push(0);
+            vertices.push(0);  
+            vertices.push(0);
+
+            uvCoords.push(0.0); uvCoords.push(0.0);
+            uvCoords.push(1.0); uvCoords.push(0.0);
+            uvCoords.push(1.0); uvCoords.push(1.0);
+
+            for(var i = 0; i < 3; i++)
+            {
+                indices.push(indices.length);
+            }
+        }
+
+        this.circle = new Mesh(vertices,indices,uvCoords);
+    }
+
     /*! Init shapes */
     static Init()
     {
@@ -170,6 +205,7 @@ class Shapes
 
         this._GenCylinder();
         this._GenSphere();
+        this._GenCircle();
 
     }
 }

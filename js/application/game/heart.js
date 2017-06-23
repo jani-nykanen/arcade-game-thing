@@ -38,6 +38,9 @@ class Heart
         this.shurikenDeathTimer = 0;
 
         this.phase = 0;
+
+        this.expTimer = 0;
+        this.exploded = false;
     }
 
     /*! Shoot an asteroid (or two) */
@@ -148,6 +151,22 @@ class Heart
                 MasterAudio.PlaySound(Assets.sounds.weird,1.0);
             }
         }
+
+        if(this.deathTimer >= 360 && this.expTimer <= 0)
+        {
+            this.expTimer = 240;
+            MasterAudio.PlaySound(Assets.sounds.finalExplosion,0.9);
+        }
+
+        if(this.expTimer > 0)
+        {
+            this.expTimer -= 1.0* timeMod;
+            if(this.expTimer <= 0)
+            {
+                this.exploded = true;
+                Stage.whiteningTimer = 120;
+            }
+        }
     }
 
     /*! Update 
@@ -155,6 +174,7 @@ class Heart
      */
     Update(timeMod)
     {
+        if(this.exploded) return;
 
         this.bumpWaitTimer += (1.0 + 1.0 - 1.0/10000 * Status.bossHealth) * (this.dead ? 2 : 1) * timeMod;
         if(this.bumpWaitTimer >= 45)
@@ -180,6 +200,14 @@ class Heart
         // DEATH!
         if(Status.bossHealth <= 0)
         {
+            var timeBonus = Math.floor(500000 - Status.time*2);
+
+            if(timeBonus < 0)
+                timeBonus = 0;
+
+            GameObjects.CreateMessage("Time bonus:\n   " + String(timeBonus),64,96,-3);
+            Status.score += timeBonus;
+
             for(var i = 0; i < GameObjects.bullets.length; i++)
             {
                 if(GameObjects.bullets[i].type == BulletType.Enemy && GameObjects.bullets[i].exist)
@@ -373,11 +401,36 @@ class Heart
         }
     }
 
+    /*! Draw da nasty explosion!
+     * @param g Graphics object
+     */
+    DrawExplosion(g)
+    {
+        g.ChangeShader(ShaderType.NoTexture);
+        g.eff.Use();
+
+        g.transf.Push();
+        
+        var mod = 1.0 - 1.0/240 * this.expTimer;
+        var scaleVal = Math.pow(2*mod,2.15);
+
+        g.transf.Scale(scaleVal,scaleVal,1.0);
+        g.transf.Use();
+
+        g.DrawMesh(Shapes.circle,null);
+
+        g.transf.Pop();
+
+        g.ChangeShader(ShaderType.Default);
+    }
+
     /*! Draw
      * @paramg g Graphics object
      */
     Draw(g)
     {   
+        if(this.exploded) return;
+
         g.eff.SetColor(1,1,1,1);
         g.eff.Use();
 
@@ -400,5 +453,8 @@ class Heart
         g.eff.Use();
 
         g.DrawCenteredBitmap(Assets.textures.heart,this.x,this.y,0,scale,scale);
+
+        if(this.expTimer > 0)
+            this.DrawExplosion(g);
     }
 }

@@ -38,6 +38,9 @@ class Player
         this.shootPhase = 0;
 
         this.hurtTimer = 0;
+
+        this.spcDeathTimer = 130;
+        this.particleTimer = 0;
     }
 
     /*! Controls */
@@ -300,6 +303,36 @@ class Player
         }
     }
 
+    /*! Aka "the ending death"
+     * @param timeMod Time modifier
+     */
+    SpecialDeath(timeMod)
+    {
+        this.spcDeathTimer -= 0.25 * timeMod;
+        if(this.spcDeathTimer <= 0.0)
+        {
+            Status.victory = true;
+        }
+
+        this.particleTimer += 1.0 * timeMod;
+        if(this.particleTimer >= 6.0)
+        {
+            for(var repeat = 0; repeat < 2 + Math.random()*4; repeat++)
+            {
+                for(var i = 0; i < GameObjects.particles.length; i++)
+                {
+                    if(GameObjects.particles[i].exist == false)
+                    {
+                        GameObjects.particles[i].Create(this.x,this.y,Math.random()*0.1 - 0.05,Math.random()*0.05);
+                        break;
+                    }
+                }
+            }
+
+            this.particleTimer -= 6.0;
+        }
+    }
+
     /*! Update
      * @param timeMod Time modifier
      */
@@ -376,6 +409,11 @@ class Player
         {
             this.gas[i].Update(timeMod);
         }
+
+        if(GameObjects.boss.heart.exploded && Stage.whiteningTimer <= 0)
+        {
+            this.SpecialDeath(timeMod);
+        }
     }
 
     /*! On bullet collision
@@ -391,6 +429,23 @@ class Player
             this.Hurt();
             b.exist = false;
             b.deathTimer = 30;
+        }
+    }
+
+    /*! Set special death color
+     * @param g Graphics object
+     */
+    SetSpcColor(g)
+    {
+        if(this.spcDeathTimer <= 60)
+        {
+            var mod = 1.0/60 * (this.spcDeathTimer);
+            g.eff.SetColor(17.0*mod,17.0*mod,17.0*mod,mod);
+        }
+        else if(this.spcDeathTimer <= 120)
+        {
+            var mod = 1.0 - 1.0/60 * (this.spcDeathTimer-60);
+            g.eff.SetColor(1.0 + 16.0*mod,1.0+16*mod,1.0+16*mod,1.0);
         }
     }
 
@@ -419,12 +474,17 @@ class Player
         {
             g.eff.SetColor(2.0,0.0,0.0,1.0);
         }
+    
+        this.SetSpcColor(g);
 
         g.eff.Use();
 
         g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
 
         g.eff.Reset();
+   
+        this.SetSpcColor(g);
+
         g.eff.Use();
 
         if(this.isShooting)
