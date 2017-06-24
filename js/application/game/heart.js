@@ -38,6 +38,7 @@ class Heart
         this.shurikenDeathTimer = 0;
 
         this.phase = 0;
+        this.spcPhase = 0;
 
         this.expTimer = 0;
         this.exploded = false;
@@ -262,7 +263,7 @@ class Heart
                     o.speed.y = 0;
                 }
 
-                if(this.phase >= 2)
+                if(this.phase >= 2 && this.spcPhase == 0)
                 {
                     for(var i = 0; i < 6 + this.phase*3 + Math.random()*(6+this.phase*2); i++)
                     {
@@ -276,6 +277,26 @@ class Heart
                 {
                     if(GameObjects.asteroids[i].exist == false) continue;
 
+                    if(this.spcPhase == 1 && this.phase >= 1)
+                    {
+                        GameObjects.asteroids[i].deathTimer = 30;
+                        GameObjects.asteroids[i].exist = false;
+
+                        var start = Math.random()* (Math.PI*4);
+                        for(var a = 0; a < 4; a++)
+                        {
+                            GameObjects.CreateBullet(
+                                GameObjects.asteroids[i].x,
+                                GameObjects.asteroids[i].y,
+                                -Math.cos(start  + a*Math.PI/4) * 0.025,
+                                -Math.sin(start  + a*Math.PI/4) * 0.025,
+                                1,BulletType.Enemy
+                            );
+                        }
+
+                        continue;
+                    }
+
                     var o = GameObjects.asteroids[i];
                     var angle = Math.random() * Math.PI * 2;
                     o.speed.x = Math.cos(angle)* (Math.random()*0.015 + 0.01);
@@ -287,7 +308,7 @@ class Heart
             {
                 this.colorModTimer  = 20;
 
-                if(this.asteroidPhase == 1 && this.phase >= 2)
+                if( (this.asteroidPhase == 1 && this.phase >= 2 && this.spcPhase == 0) || (this.asteroidPhase == 2 && this.spcPhase == 1 && this.phase >= 1) )
                     MasterAudio.PlaySound(Assets.sounds.enemyShoot,0.7);
                 else
                     MasterAudio.PlaySound(Assets.sounds.getBack,0.7);
@@ -295,7 +316,12 @@ class Heart
 
             this.asteroidPhase++;
             if(this.asteroidPhase == 3)
+            {
                 this.asteroidPhase = 0;
+                this.spcPhase ++;
+                if(this.spcPhase > 1)
+                    this.spcPhase = 0;
+            }
         }
 
         if(this.colorModTimer  > 0)

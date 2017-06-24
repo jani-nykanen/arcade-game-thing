@@ -43,6 +43,7 @@ class Assets
         this.music = 
         {
             theme : Loader.LoadMusic("assets/audio/theme.ogg"),
+            ending : Loader.LoadMusic("assets/audio/ending.mp3"),
         }
 
         this.sounds = 

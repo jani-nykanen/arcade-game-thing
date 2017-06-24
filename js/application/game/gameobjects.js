@@ -130,6 +130,7 @@ class GameObjects
         if(this.player.spcDeathTimer <= 120)
         {
             g.ChangeShader(ShaderType.NoTexture);
+            g.eff.Use();
 
             for(var i = 0; i < this.particles.length; i++)
             {

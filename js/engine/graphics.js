@@ -486,6 +486,26 @@ class Graphics
             x,y,spr.width,spr.height,angle,sx,sy);
     }
 
+    /*! Draw sprite (special for non-pixel perfect rendering)
+     * @param bmp Bitmap
+     * @param x X coord
+     * @param y Y coord
+     * @param column Frame 
+     * @param row Row
+     * @param angle Angle
+     * @param sx Scale x
+     * @param sy Scale y
+     */
+    DrawSpriteFrameSpecial(bmp,spr,x,y,column,row,angle,sx,sy)
+    {
+        var sourcex = column * spr.width;
+        var sourcey = row * spr.height;
+
+        this.DrawCenteredBitmapRegion(bmp,sourcex,sourcey,
+            spr.width,spr.height,
+            x,y,spr.width,spr.height,angle,sx,sy);
+    }
+
     /*! Fill a rectangle
      * @param x X
      * @param y Y

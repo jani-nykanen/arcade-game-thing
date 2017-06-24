@@ -308,28 +308,31 @@ class Player
      */
     SpecialDeath(timeMod)
     {
-        this.spcDeathTimer -= 0.25 * timeMod;
+        this.spcDeathTimer -= 0.125 * timeMod;
         if(this.spcDeathTimer <= 0.0)
         {
             Status.victory = true;
         }
 
-        this.particleTimer += 1.0 * timeMod;
-        if(this.particleTimer >= 6.0)
+        if(this.spcDeathTimer > 30)
         {
-            for(var repeat = 0; repeat < 2 + Math.random()*4; repeat++)
+            this.particleTimer += 1.0 * timeMod;
+            if(this.particleTimer >= 6.0)
             {
-                for(var i = 0; i < GameObjects.particles.length; i++)
+                for(var repeat = 0; repeat < 2 + Math.random()*4; repeat++)
                 {
-                    if(GameObjects.particles[i].exist == false)
+                    for(var i = 0; i < GameObjects.particles.length; i++)
                     {
-                        GameObjects.particles[i].Create(this.x,this.y,Math.random()*0.1 - 0.05,Math.random()*0.05);
-                        break;
+                        if(GameObjects.particles[i].exist == false)
+                        {
+                            GameObjects.particles[i].Create(this.x,this.y,Math.random()*0.1 - 0.05,Math.random()*0.05);
+                            break;
+                        }
                     }
                 }
-            }
 
-            this.particleTimer -= 6.0;
+                this.particleTimer -= 6.0;
+            }
         }
     }
 
@@ -385,7 +388,7 @@ class Player
         this.MoveCamera(timeMod);
         this.Limit();
 
-        if(this.totalSpeed > 0 && this.warpTimer <= 0.0)
+        if(this.spcDeathTimer > 60 && this.totalSpeed > 0 && this.warpTimer <= 0.0)
         {
             this.gasTimer -= 1.0 * timeMod;
             if(this.gasTimer <= 0.0)
@@ -432,23 +435,6 @@ class Player
         }
     }
 
-    /*! Set special death color
-     * @param g Graphics object
-     */
-    SetSpcColor(g)
-    {
-        if(this.spcDeathTimer <= 60)
-        {
-            var mod = 1.0/60 * (this.spcDeathTimer);
-            g.eff.SetColor(17.0*mod,17.0*mod,17.0*mod,mod);
-        }
-        else if(this.spcDeathTimer <= 120)
-        {
-            var mod = 1.0 - 1.0/60 * (this.spcDeathTimer-60);
-            g.eff.SetColor(1.0 + 16.0*mod,1.0+16*mod,1.0+16*mod,1.0);
-        }
-    }
-
     /*! Draw player
      * @param g Graphics object
      */
@@ -474,17 +460,37 @@ class Player
         {
             g.eff.SetColor(2.0,0.0,0.0,1.0);
         }
-    
-        this.SetSpcColor(g);
 
         g.eff.Use();
 
-        g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+        if(this.spcDeathTimer > 120)
+        {
+            g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+        }
+        else
+        {
+            if(this.spcDeathTimer <= 60)
+            {
+                var mod = 1.0/60.0 * (this.spcDeathTimer);
+                g.eff.SetColor(mod,mod,mod,mod);
+                g.eff.Use();
+                g.DrawSpriteFrameSpecial(Assets.textures.bee,this.spr,this.x,this.y,
+                        this.spr.currentFrame,this.spr.currentRow + 2,
+                        this.angle,0.5*scaleMod,0.5*scaleMod);
+            }
+            else
+            {
+                g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
+                var mod = 1.0 - 1.0/60.0 * (this.spcDeathTimer-60);
+                g.eff.SetColor(1,1,1,mod);
+                g.eff.Use();
+                g.DrawSpriteFrameSpecial(Assets.textures.bee,this.spr,this.x,this.y,
+                        this.spr.currentFrame,this.spr.currentRow + 2,
+                        this.angle,0.5*scaleMod,0.5*scaleMod);
+            }
+        }
 
         g.eff.Reset();
-   
-        this.SetSpcColor(g);
-
         g.eff.Use();
 
         if(this.isShooting)

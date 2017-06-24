@@ -58,6 +58,8 @@ class Game extends Scene
         if(GameObjects.player.spcDeathTimer > 0)
             GameObjects.DrawInCanvasSize(g);
 
+        g.SetFiltering(TextureFilter.Nearest);
+
         g.eff.Reset();
         g.eff.Use();
         g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);

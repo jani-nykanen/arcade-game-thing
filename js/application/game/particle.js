@@ -12,6 +12,7 @@ class Particle
         this.y = 0;
         this.speed = {x:0,y:0};
         this.exist = false;
+        this.size = 0.05;
     }
 
     /*! Create a particle
@@ -27,6 +28,7 @@ class Particle
         this.speed.x = sx;
         this.speed.y = sy;
         this.exist = true;
+        this.size = 0.04 + Math.random()*0.035;
     }
 
     /*! Update
@@ -65,6 +67,8 @@ class Particle
      */
     Draw(g)
     {
-        g.FillRect(this.x-0.075/2,this.y-0.075/2,0.075,0.075);
+        if(this.exist == false) return;
+
+        g.FillRect(this.x-this.size/2,this.y-this.size/2,this.size,this.size);
     }
 }

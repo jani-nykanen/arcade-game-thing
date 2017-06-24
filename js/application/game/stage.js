@@ -206,7 +206,14 @@ class Stage
         }
 
         if(this.whiteningTimer > 0)
+        {
             this.whiteningTimer -= 1.0 * timeMod;
+            if(this.whiteningTimer <= 0.0)
+            {
+                MasterAudio.PlayMusic(Assets.music.ending,0.0,true);
+                MasterAudio.Fade(1.0,0.017);
+            }    
+        }
     }
 
     /*! Draw
