@@ -23,8 +23,8 @@ class Particle
      */
     Create(x,y,sx,sy)
     {
-        this.x = x;
-        this.y = y;
+        this.x = GameObjects.player.x; // x;
+        this.y = GameObjects.player.y; // y
         this.speed.x = sx;
         this.speed.y = sy;
         this.exist = true;

@@ -352,10 +352,6 @@ class Player
      */
     SpecialDeath(timeMod)
     {
-
-        this.x = 0;
-        this.y = 0;
-
         this.spcDeathTimer -= 0.125 * timeMod;
         if(this.spcDeathTimer <= 0.0)
         {
