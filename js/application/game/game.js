@@ -15,6 +15,20 @@ class Game extends Scene
         GameObjects.Init(Super.graphics.gl);
         HUD.Init(Super.graphics.gl);
         Status.Init();
+
+        Fade.Set(null,1.0,FadeMode.Out);
+    }
+
+    /*! Reset */
+    Reset()
+    {
+        Status.Reset();
+        Stage.Reset();
+        GameObjects.Reset();
+
+        Camera.x = GameObjects.player.x;
+        Camera.y = GameObjects.player.y;
+        Camera.shakeTimer = 0;
     }
 
     /*! Draw, see scene.js*/
@@ -80,6 +94,25 @@ class Game extends Scene
         HUD.Update(timeMod);
 
         Status.Update(timeMod);
+
+        /* This will be removed eventually */
+        if((Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down) && Controls.keystate[82] == State.Pressed)
+        {
+            this.Reset();
+        }
+
+        if( (Status.health == 0 && Status.healthRestore < 0.05) || ( Status.health < 0 ) )
+        {
+            this.Reset();
+        }
+
+        if(Status.victory && Fade.timer <= 0)
+        {
+            Fade.Set(function()
+            {
+                ref.currentScene = "gameover";
+            },1.0,FadeMode.In);
+        }
     }
 
     /*! On loaded */

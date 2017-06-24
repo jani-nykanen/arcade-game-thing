@@ -16,6 +16,16 @@ class HUD
         this.lastBombTimer = 0;
     }
 
+    /*! Reset */
+    static Reset()
+    {
+        this.timeMod = 0;
+        this.oldHbar = 10000.0;
+        this.oldExp = 0.0;
+        this.lastBomb = 3;
+        this.lastBombTimer = 0;
+    }
+
     /*! Update HUD
      * @param timeMod Time modifier
      */

@@ -14,6 +14,8 @@ class Player
         this.x = x;
         this.y = y;
 
+        this.start = {x:x,y:y};
+
         this.speed = {x:0,y:0};
         this.target = {x:0,y:0};
         this.totalSpeed = 0.0;
@@ -43,10 +45,43 @@ class Player
         this.particleTimer = 0;
     }
 
+    /*! Reset */
+    Reset()
+    {
+        this.x = this.start.x;
+        this.y = this.start.y;
+
+        this.speed.x = 0;
+        this.speed.y = 0;
+        this.target.x = 0;
+        this.target.y = 0;
+        this.totalSpeed = 0.0;
+
+        this.angle = 0.0;
+
+        for(var i = 0; i < 16; i++)
+        {
+            this.gas[i].exist = false;
+        }
+        this.gasTimer = 10;
+
+        this.warpTimer = 0;
+
+        this.isShooting = false;
+        this.isSpcShooting = false;
+        this.spcShootTimer = 0;
+        this.shootPhase = 0;
+
+        this.hurtTimer = 0;
+
+        this.spcDeathTimer = 130;
+        this.particleTimer = 0;
+    }
+
     /*! Controls */
     Controls()
     {
-        if(this.isSpcShooting)
+        if(this.isSpcShooting && this.spcDeathTimer > 120 )
         {
             this.target.x = 0;
             this.target.y = 0;
@@ -72,10 +107,11 @@ class Player
         
         if(this.warpTimer <= 0)
         {
+            
             this.target.x = VPad.axis.x / 50;
             this.target.y = VPad.axis.y / 50;
 
-            if(VPad.buttons.warp.state == State.Pressed)
+            if(this.spcDeathTimer > 120  && VPad.buttons.warp.state == State.Pressed)
             {
                 this.warpTimer = 30;
                 this.speed.x *= 2;
@@ -85,7 +121,7 @@ class Player
 
                 MasterAudio.PlaySound(Assets.sounds.warp,0.70);
             }
-            else if(this.isShooting == false)
+            else if(this.spcDeathTimer > 120  && this.isShooting == false)
             {
                 if(Controls.mousestate[0] == State.Down)
                 {
@@ -137,7 +173,7 @@ class Player
                         this.shootPhase = 0;
 
                 }
-                else if(Status.bombs > 0 && Controls.mousestate[2] == State.Pressed)
+                else if(this.spcDeathTimer > 120 && Status.bombs > 0 && Controls.mousestate[2] == State.Pressed)
                 {
                     MasterAudio.PlaySound(Assets.sounds.specialShoot,0.7);
                     Status.bombs --;
@@ -331,7 +367,8 @@ class Player
                     }
                 }
 
-                this.particleTimer -= 6.0;
+                while(this.particleTimer >= 6.0)
+                    this.particleTimer -= 6.0;
             }
         }
     }

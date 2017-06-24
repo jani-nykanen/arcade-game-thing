@@ -44,6 +44,40 @@ class Heart
         this.exploded = false;
     }
 
+    /*! Reset */
+    Reset()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.dead = false;
+        this.deathTimer = 0;
+        this.bumpTimer = 0;
+        this.bumpWaitTimer = 0;
+
+        this.hurtTimer = 0;
+
+        this.asteroidTimer = 120 + Math.random()*120;
+        this.asteroidPhase = 0;
+        this.colorModTimer = 0;
+
+        for(var i = 0; i < this.shurikens.length; i++)
+        {
+            this.shurikens[i].x = 0;
+            this.shurikens[i].y = 0;
+            this.shurikens[i].radius = 0;
+            this.shurikens[i].centerAngle = Math.random()*Math.PI*2;
+            this.shurikens[i].active = false;
+            this.shurikens[i].sinMod = i * (Math.PI / 3);
+        }
+        this.shurikenDeathTimer = 0;
+
+        this.phase = 0;
+        this.spcPhase = 0;
+
+        this.expTimer = 0;
+        this.exploded = false;
+    }
+
     /*! Shoot an asteroid (or two) */
     ShootAsteroid()
     {

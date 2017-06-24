@@ -19,6 +19,8 @@
 
         this.loadableData = 0;
         this.currentlyLoaded = 0;
+
+        this.firstTextureLoaded = false;
     }
 
     /*! Get percentage, how much is loaded
@@ -42,6 +44,7 @@
         
         img.onload = function() 
         { 
+            Loader.firstTextureLoaded = true;
             Loader.currentlyLoaded ++;
             Loader._HandleTexture(img, tex, bmp); 
         }

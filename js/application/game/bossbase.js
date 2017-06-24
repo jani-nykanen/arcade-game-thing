@@ -35,6 +35,38 @@ class BossBase
         this.shootPhase = 0;
     }
 
+    /*! Reset */
+    Reset()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.speed.x = 0;
+        this.speed.y = 0;
+        this.target.x = 0;
+        this.target.y = 0;
+        this.angle = 0;
+        this.plantScaleMod = 0.0;
+        this.plantSize = 0;
+        this.plantDying = false;
+        this.plantDead = false;
+        this.hurtTimer = 0;
+        this.faceDead = false;
+        this.faceDeathTimer = 0;
+
+        for(var i = 0; i < this.ringPos.length; i++)
+        {
+            this.ringPos[i].x = 0;
+            this.ringPos[i].y = 0;
+        }
+
+        this.dead = false;
+        this.deathTimer = 0;
+
+        this.shootTimer = 0;
+        this.colorModTimer = 0;
+        this.shootPhase = 0;
+    }
+
     /*! Calculate ring positions */
     CalculateRingPos()
     {

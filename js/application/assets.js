@@ -38,6 +38,7 @@ class Assets
             spiral : Loader.LoadBitmap("assets/bitmaps/spiral.png"),
             heart: Loader.LoadBitmap("assets/bitmaps/heart.png"),  
             asteroid: Loader.LoadBitmap("assets/bitmaps/asteroid.png"),  
+            logo: Loader.LoadBitmap("assets/bitmaps/logo.png"), 
         };
 
         this.music = 

@@ -16,6 +16,17 @@ class Boss
         this.heart = new Heart();
     }
 
+    /*! Reset */
+    Reset()
+    {
+        this.base.Reset();
+        for(var i = 0; i < 4; i++)
+        {
+            this.hands[i].Reset();
+        }
+        this.heart.Reset();
+    }
+
     /*! Update 
      * @param timeMod Time modifier 
      */

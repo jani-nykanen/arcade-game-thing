@@ -11,6 +11,7 @@ class BossHand
     constructor(angle)
     {
         this.angle = angle;
+        this.startAngle = angle;
         this.angleSpeed = 0;
         this.angleTargetSpeed = 0;
         this.ringAngle = angle;
@@ -30,6 +31,40 @@ class BossHand
         for(var i = 0; i < this.ringPos.length; i++)
         {
             this.ringPos[i] = {x:0,y:0};
+        }
+
+        this.hurtTimer = 0;
+
+        this.dead = false;
+        this.deathTimer = 0;
+
+        this.shootTimer = 240 + Math.random() * 180;
+        this.colorModTimer = 0;
+    }
+
+    /*! Reset */
+    Reset()
+    {
+        this.angle = this.startAngle;
+        this.angleSpeed = 0;
+        this.angleTargetSpeed = 0;
+        this.ringAngle = this.startAngle;
+        this.radius = 1.5;
+        this.radiusTargetSpeed = 0.0;
+        this.radiusSpeed = 0.0;
+        this.radStart = 1.65;
+        this.radMod = this.startAngle;
+
+        this.x = 0;
+        this.y = 0;
+
+        this.dx = 0;
+        this.dy = 0;
+
+        for(var i = 0; i < this.ringPos.length; i++)
+        {
+            this.ringPos[i].x = 0;
+            this.ringPos[i].y = 0
         }
 
         this.hurtTimer = 0;

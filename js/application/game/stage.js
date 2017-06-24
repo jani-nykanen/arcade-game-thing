@@ -28,6 +28,24 @@ class Stage
         this.whiteningTimer = 0;
     }
 
+    /*! Reset */
+    static Reset()
+    {
+        this.spacePos = 0.0;
+        this.sunAngle = 0.0;    
+        this.shineValue = 0.0;
+
+        this.earthAngle = 0.0;
+
+        this.phase = 1;
+        this.phaseChangeTimer = 0;
+
+        this.platformTimer = 0;
+        this.platformDead = false;
+
+        this.whiteningTimer = 0;
+    }
+
     /*! Draw space
      * @param g Graphics object
      */

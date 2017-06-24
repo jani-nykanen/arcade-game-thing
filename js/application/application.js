@@ -51,6 +51,7 @@ class Application extends ApplicationCore
 
         this.scenes = {};
         this.scenes.game = new Game();
+        this.scenes.gameover = new GameOver();
 
         for(var key in this.scenes)
         {
@@ -120,6 +121,8 @@ class Application extends ApplicationCore
         this.scenes[this.currentScene].Update(this.timeMod);
 
         MasterAudio.Update(this.timeMod);
+
+        Fade.Update(this.timeMod);
     }
 
     /*! Draw to the framebuffer
@@ -151,7 +154,7 @@ class Application extends ApplicationCore
         g.eff.Reset();
         g.eff.Use();
 
-        if(Loader.currentlyLoaded > 0)
+        if(Loader.firstTextureLoaded)
         {
             g.DrawText(HUD.font,Assets.textures.font16,"Loading... " + Loader.GetPercentage(),32,32,0,-1);
         }
@@ -182,6 +185,8 @@ class Application extends ApplicationCore
     DrawContent(g)
     {
         this.scenes[this.currentScene].Draw(g);
+
+        Fade.Draw(g);
     }
 
     /*! OnDraw, see core.js */

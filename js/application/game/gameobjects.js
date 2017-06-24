@@ -35,6 +35,35 @@ class GameObjects
         }
     }
 
+    /*! Reset */
+    static Reset()
+    {
+        this.player.Reset();
+        this.boss.Reset();
+
+        for(var i = 0; i < this.bullets.length; i++)
+        {
+            this.bullets[i].exist = false;
+            this.bullets[i].deathTimer = 0;
+        }
+
+        for(var i = 0; i < this.messages.length; i++)
+        {
+            this.messages[i].exist = false;
+        }
+
+        for(var i = 0; i < this.asteroids.length; i++)
+        {
+            this.asteroids[i].exist = false;
+            this.asteroids[i].deathTimer = 0;
+        }
+
+        for(var i = 0; i < this.particles.length; i++)
+        {
+            this.particles[i].exist = false;
+        }
+    }
+
     /*! Update
      * @param timeMod Time modifier
      */

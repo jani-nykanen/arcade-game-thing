@@ -42,6 +42,7 @@ class MasterAudio
      */
     static PlayMusic(m,vol,loop)
     {
+        m.track.currentTime = 0;
         m.Play(this.musicVol*vol,loop);
         this.currentTrack = m.track;
     }
