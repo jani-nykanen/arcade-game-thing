@@ -64,6 +64,7 @@ class Assets
             bump : Loader.LoadSound("assets/audio/bump.wav"),
             weird : Loader.LoadSound("assets/audio/weird.wav"),
             finalExplosion : Loader.LoadSound("assets/audio/final_explosion.ogg"),
+            die : Loader.LoadSound("assets/audio/die.wav"),
         }
     }
 

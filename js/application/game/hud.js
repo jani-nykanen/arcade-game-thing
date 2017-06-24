@@ -205,7 +205,6 @@ class HUD
         g.DrawText(this.font,Assets.textures.font16,"WEAPON:" ,36 - 4*8,22,-3);
     
         g.ChangeShader(ShaderType.NoTexture);
-
        
         g.FillRect(6,35,80,15);
 

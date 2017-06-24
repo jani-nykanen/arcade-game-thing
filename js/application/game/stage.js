@@ -225,6 +225,12 @@ class Stage
 
         if(this.whiteningTimer > 0)
         {
+            GameObjects.player.x = 0;
+            GameObjects.player.y = 0;
+
+            Camera.x = 0;
+            Camera.y = 0;
+
             this.whiteningTimer -= 1.0 * timeMod;
             if(this.whiteningTimer <= 0.0)
             {

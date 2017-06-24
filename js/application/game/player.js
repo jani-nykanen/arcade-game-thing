@@ -43,6 +43,9 @@ class Player
 
         this.spcDeathTimer = 130;
         this.particleTimer = 0;
+
+        this.dead = false;
+        this.deathTimer = 0;
     }
 
     /*! Reset */
@@ -76,6 +79,9 @@ class Player
 
         this.spcDeathTimer = 130;
         this.particleTimer = 0;
+
+        this.dead = false;
+        this.deathTimer = 0;
     }
 
     /*! Controls */
@@ -317,6 +323,8 @@ class Player
     /*! Hurt player */
     Hurt()
     {
+        if(this.dead) return;
+
         if(this.warpTimer <= 0 && this.hurtTimer <= 0)
         {
             this.hurtTimer = 60;
@@ -344,6 +352,10 @@ class Player
      */
     SpecialDeath(timeMod)
     {
+
+        this.x = 0;
+        this.y = 0;
+
         this.spcDeathTimer -= 0.125 * timeMod;
         if(this.spcDeathTimer <= 0.0)
         {
@@ -355,7 +367,7 @@ class Player
             this.particleTimer += 1.0 * timeMod;
             if(this.particleTimer >= 6.0)
             {
-                for(var repeat = 0; repeat < 2 + Math.random()*4; repeat++)
+                for(var repeat = 0; repeat < 2 + Math.floor( Math.random()*4 ); repeat++)
                 {
                     for(var i = 0; i < GameObjects.particles.length; i++)
                     {
@@ -378,6 +390,26 @@ class Player
      */
     Update(timeMod)
     {
+        if(this.dead == false && ( (Status.health == 0 && Status.healthRestore < 0.2) || ( Status.health < 0 ) ) )
+        {
+            this.dead = true;
+            this.deathTimer = 60;
+            MasterAudio.PlaySound(Assets.sounds.die,0.9);
+            MasterAudio.Fade(0.0,1.0);
+        }
+
+        if(this.dead)
+        {
+            Status.health = 0;
+            Status.healthRestore = 0.0;
+            this.hurtTimer = 0;
+
+            if(this.deathTimer > 0)
+                this.deathTimer -= 0.5 * timeMod;
+
+            return;
+        }
+
         if(!this.isSpcShooting)
         {
             if(this.warpTimer <= 0.0)
@@ -461,7 +493,7 @@ class Player
      */
     OnBulletCollision(b)
     {
-        if(this.warpTimer > 0 || b.exist == false || b.type != BulletType.Enemy || this.hurtTimer > 0) return;
+        if(this.dead || this.warpTimer > 0 || b.exist == false || b.type != BulletType.Enemy || this.hurtTimer > 0) return;
 
         var dist = Math.hypot(this.x-b.x,this.y-b.y);
         if(dist < 0.1)
@@ -478,6 +510,8 @@ class Player
     Draw(g)
     {
         g.SetFiltering(TextureFilter.Linear);
+
+        if(this.dead && this.deathTimer <= 0) return;
 
         for(var i = 0; i < this.gas.length; i++)
         {
@@ -502,6 +536,14 @@ class Player
 
         if(this.spcDeathTimer > 120)
         {
+            if(this.dead)
+            {
+                var mod = this.deathTimer * (1.0/60.0);
+                g.eff.SetColor( Math.floor(this.deathTimer/4) %2 == 0 ?  mod : 10.0,mod,mod,mod);
+                scaleMod *= 1.0 + 2*(1.0-mod);
+                g.eff.Use();
+            }
+
             g.DrawSpriteSpecial(Assets.textures.bee,this.spr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
         }
         else
@@ -530,7 +572,7 @@ class Player
         g.eff.Reset();
         g.eff.Use();
 
-        if(this.isShooting)
+        if(this.isShooting && !this.dead)
         {
             g.DrawSpriteSpecial(Assets.textures.bee,this.shootSpr,this.x,this.y,this.angle,0.5*scaleMod,0.5*scaleMod);
         }

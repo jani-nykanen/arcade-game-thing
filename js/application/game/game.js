@@ -98,12 +98,13 @@ class Game extends Scene
         /* This will be removed eventually */
         if((Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down) && Controls.keystate[82] == State.Pressed)
         {
-            this.Reset();
+            Status.health = -1;
         }
 
-        if( (Status.health == 0 && Status.healthRestore < 0.05) || ( Status.health < 0 ) )
+        if(Fade.timer <= 0 &&  GameObjects.player.dead && GameObjects.player.deathTimer <= 0)
         {
-            this.Reset();
+            this.Super.scenes.gameover.Set(this.Super.graphics);
+            ref.currentScene = "gameover";
         }
 
         if(Status.victory && Fade.timer <= 0)
