@@ -39,7 +39,7 @@
      */
     static AddPoints(points)
     {
-        this.score += points * (this.chain);
+        this.score += points * (this.chain) * 10;
         this.chainExp += points/this.chain / 10.0;
 
         if(points < 1000)

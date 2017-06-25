@@ -260,10 +260,12 @@ class BossBase
             this.deathTimer = 60;
             Camera.Shake(120,8.0);
 
-            var timeBonus = Math.floor(150000 - Status.time);
+            var timeBonus = Math.floor(150000 - Status.time*4);
 
             if(timeBonus < 0)
                 timeBonus = 0;
+
+            timeBonus *= 10;
 
             GameObjects.CreateMessage("Time bonus:\n   " + String(timeBonus),64,96,-3);
             Status.score += timeBonus;

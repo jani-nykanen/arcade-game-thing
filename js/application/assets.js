@@ -40,12 +40,14 @@ class Assets
             asteroid: Loader.LoadBitmap("assets/bitmaps/asteroid.png"),  
             logo: Loader.LoadBitmap("assets/bitmaps/logo.png"), 
             spaceBg: Loader.LoadBitmap("assets/bitmaps/space_bg.png"), 
+            creators: Loader.LoadBitmap("assets/bitmaps/creators.png"), 
         };
 
         this.music = 
         {
             theme : Loader.LoadMusic("assets/audio/theme.ogg"),
             ending : Loader.LoadMusic("assets/audio/ending.mp3"),
+            menu : Loader.LoadMusic("assets/audio/menu.mp3"),
         }
 
         this.sounds = 
@@ -66,6 +68,7 @@ class Assets
             weird : Loader.LoadSound("assets/audio/weird.wav"),
             finalExplosion : Loader.LoadSound("assets/audio/final_explosion.ogg"),
             die : Loader.LoadSound("assets/audio/die.wav"),
+            choose : Loader.LoadSound("assets/audio/choose.wav"),
         }
     }
 

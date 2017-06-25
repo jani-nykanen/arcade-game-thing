@@ -268,6 +268,8 @@ class BossHand
                 if(timeBonus < 0)
                     timeBonus = 0;
 
+                timeBonus *= 10;
+
                 GameObjects.CreateMessage("Time bonus:\n   " + String(timeBonus),64,96,-3);
                 Status.score += timeBonus;
             }

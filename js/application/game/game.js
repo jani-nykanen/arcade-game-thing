@@ -114,7 +114,7 @@ class Game extends Scene
             },1.0,FadeMode.In);
         }
         
-        if(Fade.timer <= 0 && Status.victory == false)
+        if(Fade.timer <= 0 && Status.bossHealth > 0 && Status.victory == false)
         {
             if(VPad.buttons.enter.state == State.Pressed)
             {
@@ -128,7 +128,6 @@ class Game extends Scene
     /*! On loaded */
     OnLoaded()
     {
-        MasterAudio.PlayMusic(Assets.music.theme,0.0,true);
-        MasterAudio.Fade(1.0,0.017);
+        
     }
 }

@@ -386,8 +386,9 @@ class Player
      */
     Update(timeMod)
     {
-        if(this.dead == false && ( (Status.health == 0 && Status.healthRestore < 0.2) || ( Status.health < 0 ) ) )
+        if(this.dead == false && Status.health <= 0)
         {
+            Status.healthRestore = 0;
             this.dead = true;
             this.deathTimer = 60;
             MasterAudio.PlaySound(Assets.sounds.die,0.9);

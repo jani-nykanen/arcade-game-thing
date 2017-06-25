@@ -61,13 +61,13 @@ class Application extends ApplicationCore
             s.Init(this.graphics,this);
         }
             
-        this.currentScene = "game";
+        this.currentScene = "title";
 
         VPad.Init();
         VPad.PushButton("warp",32);
         VPad.PushButton("enter",13);
 
-        MasterAudio.SetSoundVolume(0.5);
+        MasterAudio.SetSoundVolume(0.625);
         MasterAudio.SetMusicVolume(1.0);
 
     }
@@ -76,7 +76,11 @@ class Application extends ApplicationCore
     OnLoaded()
     {
         this.loaded = true;
-        this.scenes.game.OnLoaded();
+        for(var key in this.scenes)
+        {
+            var s = this.scenes[key];
+            s.OnLoaded();
+        }
     }
 
     /*! OnResize, see core.js */

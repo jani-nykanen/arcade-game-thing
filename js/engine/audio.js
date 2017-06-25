@@ -53,7 +53,8 @@ class MasterAudio
      */
     static PlaySound(s,vol)
     {
-        s.Play(vol);
+        if(this.soundVol == 0.0) return;
+        s.Play(vol*this.soundVol);
     }
 
     /*! Fade in music
@@ -62,6 +63,8 @@ class MasterAudio
      */
     static Fade(target, speed)
     {
+        if(this.musicVol == 0.0) return;
+
         this.doFade = true;
         this.fadeSpeed = speed;
         this.target = target;

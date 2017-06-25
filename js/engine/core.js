@@ -10,6 +10,7 @@
  */
  
 var classRef = null; //! Required for callback functions
+var _spc_userGestureFullscreen = false;
 
 /*! Application core class
  *
@@ -97,6 +98,14 @@ class ApplicationCore
 	static _OnMouseDown(event)
 	{
 		Controls.OnMouseDown(event.button);
+		if(_spc_userGestureFullscreen)
+		{
+			Utility.ToggleFullscreen();
+			_spc_userGestureFullscreen = false;
+			Menu.mouseDemandRelease = true;
+			MasterAudio.PlaySound(Assets.sounds.choose,1.0);
+		}
+
 	}
 
 	/*! Event callback, on mouse button released */
