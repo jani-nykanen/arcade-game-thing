@@ -39,6 +39,7 @@ class Assets
             heart: Loader.LoadBitmap("assets/bitmaps/heart.png"),  
             asteroid: Loader.LoadBitmap("assets/bitmaps/asteroid.png"),  
             logo: Loader.LoadBitmap("assets/bitmaps/logo.png"), 
+            spaceBg: Loader.LoadBitmap("assets/bitmaps/space_bg.png"), 
         };
 
         this.music = 

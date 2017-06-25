@@ -72,12 +72,6 @@ class Game extends Scene
         if(GameObjects.player.spcDeathTimer > 0)
             GameObjects.DrawInCanvasSize(g);
 
-        g.SetFiltering(TextureFilter.Nearest);
-
-        g.eff.Reset();
-        g.eff.Use();
-        g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);
-        
     }
 
     /*! Update, see scene.js */
@@ -101,6 +95,11 @@ class Game extends Scene
             Status.health = -1;
         }
 
+        if((Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down) && Controls.keystate[84] == State.Pressed)
+        {
+            ref.currentScene = "title";
+        }
+
         if(Fade.timer <= 0 &&  GameObjects.player.dead && GameObjects.player.deathTimer <= 0)
         {
             this.Super.scenes.gameover.Set(this.Super.graphics);
@@ -113,6 +112,16 @@ class Game extends Scene
             {
                 ref.currentScene = "gameover";
             },1.0,FadeMode.In);
+        }
+        
+        if(Fade.timer <= 0 && Status.victory == false)
+        {
+            if(VPad.buttons.enter.state == State.Pressed)
+            {
+                MasterAudio.Fade(0.5,1.0);
+                ref.currentScene = "pause";
+                ref.scenes.pause.Set(this.Super.graphics);
+            }
         }
     }
 

@@ -52,6 +52,8 @@ class Application extends ApplicationCore
         this.scenes = {};
         this.scenes.game = new Game();
         this.scenes.gameover = new GameOver();
+        this.scenes.pause = new Pause();
+        this.scenes.title = new TitleScreen();
 
         for(var key in this.scenes)
         {
@@ -63,6 +65,7 @@ class Application extends ApplicationCore
 
         VPad.Init();
         VPad.PushButton("warp",32);
+        VPad.PushButton("enter",13);
 
         MasterAudio.SetSoundVolume(0.5);
         MasterAudio.SetMusicVolume(1.0);
@@ -187,6 +190,12 @@ class Application extends ApplicationCore
         this.scenes[this.currentScene].Draw(g);
 
         Fade.Draw(g);
+
+        g.SetFiltering(TextureFilter.Nearest);
+
+        g.eff.Reset();
+        g.eff.Use();
+        g.DrawBitmapRegion(Assets.textures.cursor,0,0,20,20,Controls.mouse.vpos.x-10,Controls.mouse.vpos.y-10,20,20);
     }
 
     /*! OnDraw, see core.js */
