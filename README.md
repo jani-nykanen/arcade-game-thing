@@ -1,5 +1,4 @@
-# arcade-game-thing
-Something made in web-gl.
+# The End - Arcade Game
 
 Master branch is empty, see [gh-pages](https://github.com/jani-nykanen/arcade-game-thing/tree/gh-pages). 
 
