@@ -109,6 +109,7 @@
         /* Debug codes
          * @todo Add own class for them
          */
+         /*
         if(Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down)
         {
             if(Controls.keystate[80] == State.Pressed && this.level < 9)
@@ -159,6 +160,7 @@
                 GameObjects.boss.base.faceDead = true;
             }
         }
+        */
 
         if(this.exp >= 1.0 && this.level < 9)
         {

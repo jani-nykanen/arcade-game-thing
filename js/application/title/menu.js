@@ -16,6 +16,9 @@ class Menu
 
         this.menuPos = 240;
         this.spacePos = 0;
+
+        this.goawayTimer = 0; // Da best name ever!
+        this.finished = false;
     }
 
     /*! Get mouse pos */
@@ -42,15 +45,7 @@ class Menu
         {
         case 0:
 
-            MasterAudio.Fade(0.0,-0.017);
-            Fade.Set(function()
-            {
-                ref.currentScene = "game";
-                ref.scenes.game.Reset();
-                MasterAudio.PlayMusic(Assets.music.theme,0.0,true);
-                MasterAudio.Fade(1.0,0.017);
-                Camera.y = -0.5;
-            },1.0,FadeMode.In);
+            this.goawayTimer = 60;
 
             MasterAudio.PlaySound(Assets.sounds.choose,1.0);
 
@@ -93,6 +88,17 @@ class Menu
      */
     static Update(timeMod)
     {
+        if(this.goawayTimer > 0)
+        {
+            this.goawayTimer -= 1.0 * timeMod;
+            if(this.goawayTimer <= 0.0)
+            {
+                this.finished = true;
+                return;
+            }
+            return;
+        }
+
         if(this.menuPos > 0)
         {
             this.menuPos -= 1.0 * timeMod;
@@ -162,23 +168,20 @@ class Menu
      */
     static Draw(g)
     {
+        g.SetFiltering(TextureFilter.Linear);
+
         g.ChangeShader(ShaderType.Default);
 
         g.transf.Ortho2D(320,240);
         g.transf.Identity();
         g.transf.Use();
 
-        g.SetFiltering(TextureFilter.Nearest);
-
         g.eff.Reset();
         g.eff.Use();
 
         g.DrawBitmapRegion(Assets.textures.spaceBg,0,this.spacePos,256,240,0,0,320,240);
 
-
-        g.SetFiltering(TextureFilter.Linear);
-
-        g.transf.Translate(0,this.menuPos,0);
+        g.transf.Translate(this.goawayTimer > 0 ? 320* (1.0 - 1.0/60.0 * (this.goawayTimer)) : 0,this.menuPos,0);
         g.transf.Use();
 
         var mod = 1.0 + 0.25 * (Math.sin(this.shineMod*1.5 + Math.PI / 2 )+1);

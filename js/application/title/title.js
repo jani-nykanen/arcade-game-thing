@@ -13,6 +13,7 @@ class TitleScreen extends Scene
 
         Menu.Init();
         Creator.Init();
+        ControlScreen.Init();
     }
 
     /*! Draw, see scene.js*/
@@ -26,6 +27,10 @@ class TitleScreen extends Scene
         {
             Creator.Draw(g);
         }
+        else
+        {
+            ControlScreen.Draw(g);
+        }
     }
 
     /*! Update, see scene.js */
@@ -36,12 +41,18 @@ class TitleScreen extends Scene
         if(this.phase == 1)
         {
             Menu.Update(timeMod);
+            if(Menu.finished)
+                this.phase = 2;
         }
         else if(this.phase == 0)
         {
             Creator.Update(timeMod);
             if(Creator.finished)
                 this.phase = 1;
+        }
+        else
+        {
+            ControlScreen.Update(timeMod);
         }
     }
 

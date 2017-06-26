@@ -89,23 +89,24 @@ class Game extends Scene
 
         Status.Update(timeMod);
 
-        /* This will be removed eventually */
+        /*
         if((Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down) && Controls.keystate[82] == State.Pressed)
         {
             Status.health = -1;
         }
-
+        
         if((Controls.keystate[225] == State.Down || Controls.keystate[18] == State.Down) && Controls.keystate[84] == State.Pressed)
         {
             ref.currentScene = "title";
         }
+        */
 
         if(Fade.timer <= 0 &&  GameObjects.player.dead && GameObjects.player.deathTimer <= 0)
         {
             this.Super.scenes.gameover.Set(this.Super.graphics);
             ref.currentScene = "gameover";
         }
-
+        
         if(Status.victory && Fade.timer <= 0)
         {
             Fade.Set(function()

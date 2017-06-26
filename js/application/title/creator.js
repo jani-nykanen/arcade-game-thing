@@ -35,6 +35,8 @@ class Creator
      */
     static Draw(g)
     {
+        g.SetFiltering(TextureFilter.Linear);
+
         if(this.finished) return;
 
         g.ChangeShader(ShaderType.Default);
@@ -43,14 +45,10 @@ class Creator
         g.transf.Identity();
         g.transf.Use();
 
-        g.SetFiltering(TextureFilter.Nearest);
-
         g.eff.Reset();
         g.eff.Use();
 
         g.DrawBitmapRegion(Assets.textures.spaceBg,0,0,256,240,0,0,320,240);
-
-        g.SetFiltering(TextureFilter.Linear);
 
         if(this.timer >= 60 && this.timer <= 120)
         {

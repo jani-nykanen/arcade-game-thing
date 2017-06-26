@@ -41,6 +41,7 @@ class Assets
             logo: Loader.LoadBitmap("assets/bitmaps/logo.png"), 
             spaceBg: Loader.LoadBitmap("assets/bitmaps/space_bg.png"), 
             creators: Loader.LoadBitmap("assets/bitmaps/creators.png"), 
+            controls: Loader.LoadBitmap("assets/bitmaps/controls.png"), 
         };
 
         this.music = 
