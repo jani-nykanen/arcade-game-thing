@@ -1,3 +1,3 @@
-# webgl-test-app
+# The End - Arcade Game
 
-[Play here](https://jani-nykanen.github.io/webgl-test-app/)# space-arcade-game-thing
+[Play here](https://jani-nykanen.github.io/arcade-game-thing/)
